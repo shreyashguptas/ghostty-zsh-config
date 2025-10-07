@@ -8,6 +8,7 @@ A comprehensive terminal enhancement setup for macOS using Ghostty terminal with
 - **Beautiful terminal appearance** with Catppuccin theme and Nerd Fonts
 - **Modern command-line tools** (eza, bat, fzf, fd, ripgrep, lazygit, delta)
 - **Enhanced shell experience** with Oh My Zsh and Powerlevel10k
+- **Conda package management** with Python 3.12 environment
 - **Productivity aliases and functions** for faster workflow
 - **Fuzzy finder integration** with keyboard shortcuts
 
@@ -48,12 +49,26 @@ chmod +x scripts/install.sh
    brew install --cask font-jetbrains-mono-nerd-font
    ```
 
-4. **Install Oh My Zsh**:
+4. **Install Conda and Python 3.12**:
+   ```bash
+   # Download and install Miniconda
+   curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+   bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda3
+   rm Miniconda3-latest-MacOSX-arm64.sh
+   
+   # Initialize Conda for zsh
+   $HOME/miniconda3/bin/conda init zsh
+   
+   # Create Python 3.12 environment
+   $HOME/miniconda3/bin/conda create -n py312 python=3.12 -y
+   ```
+
+5. **Install Oh My Zsh**:
    ```bash
    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
    ```
 
-5. **Install Oh My Zsh plugins**:
+6. **Install Oh My Zsh plugins**:
    ```bash
    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -61,19 +76,19 @@ chmod +x scripts/install.sh
    git clone https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
    ```
 
-6. **Copy configuration files**:
+7. **Copy configuration files**:
    ```bash
    cp configs/ghostty.conf ~/.config/ghostty/
    cp configs/.zshrc ~/
    cp configs/.p10k.zsh ~/
    ```
 
-7. **Set up fzf**:
+8. **Set up fzf**:
    ```bash
    $(brew --prefix)/opt/fzf/install --all
    ```
 
-8. **Configure git delta**:
+9. **Configure git delta**:
    ```bash
    git config --global core.pager delta
    git config --global interactive.diffFilter 'delta --color-only'
@@ -82,12 +97,12 @@ chmod +x scripts/install.sh
    git config --global delta.syntax-theme "Monokai Extended"
    ```
 
-9. **Restart your terminal** or run:
-   ```bash
-   source ~/.zshrc
-   ```
+10. **Restart your terminal** or run:
+    ```bash
+    source ~/.zshrc
+    ```
 
-10. **Configure your prompt**:
+11. **Configure your prompt**:
     ```bash
     p10k configure
     ```
@@ -121,6 +136,7 @@ ghostty-zsh-config/
 - **lazygit** - Beautiful git interface
 - **delta** - Better git diffs
 - **htop** - Enhanced process viewer
+- **Conda** - Package manager with Python 3.12 environment
 
 ### Shell Enhancements
 - **Oh My Zsh** - ZSH framework
@@ -143,6 +159,16 @@ ghostty-zsh-config/
 - `weather <city>` - Weather information
 - `fzf-open` - Find and open files
 - `search <pattern>` - Search files with ripgrep + fzf
+
+### Conda Aliases
+- `ca <env>` - Activate conda environment
+- `cda` - Deactivate current conda environment
+- `ce` - List all conda environments
+- `ci <package>` - Install conda package
+- `cc <env> python=x.x` - Create new conda environment
+- `cr <package>` - Remove conda package
+- `cup <package>` - Update conda package
+- `csp <package>` - Search conda packages
 
 ### Custom Functions
 - `mkcd <dir>` - Create directory and cd into it
@@ -194,6 +220,13 @@ weather London          # Weather information
 search "function"       # Search files
 nav                     # Navigate directories
 Ctrl+R                  # Search command history
+
+# Conda and Python
+python --version        # Check Python version (3.12.11)
+conda --version         # Check Conda version
+ce                      # List conda environments
+ca py312               # Activate Python 3.12 environment
+ci numpy               # Install numpy with conda
 ```
 
 ## 🔄 Updates

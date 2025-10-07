@@ -115,10 +115,23 @@ This document provides a comprehensive reference for all aliases and functions a
 
 | Alias | Command | Description |
 |-------|---------|-------------|
-| `py` | `python3` | Run Python 3 |
-| `pip` | `pip3` | Use pip3 |
-| `serve` | `python3 -m http.server` | Start HTTP server |
-| `json` | `python3 -m json.tool` | Format JSON |
+| `py` | `python` | Run Python (Conda environment) |
+| `pip` | `pip` | Use pip (Conda environment) |
+| `serve` | `python -m http.server` | Start HTTP server |
+| `json` | `python -m json.tool` | Format JSON |
+
+## 🐍 Conda Aliases
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `ca` | `conda activate` | Activate conda environment |
+| `cda` | `conda deactivate` | Deactivate current environment |
+| `ce` | `conda env list` | List all conda environments |
+| `ci` | `conda install` | Install conda package |
+| `cc` | `conda create` | Create new conda environment |
+| `cr` | `conda remove` | Remove conda package |
+| `cup` | `conda update` | Update conda package |
+| `csp` | `conda search` | Search conda packages |
 
 ## 🍎 macOS Specific Aliases
 
@@ -272,6 +285,31 @@ killport 3000           # Kill development server
 htop                    # Monitor system resources
 ```
 
+### Python and Conda Workflow
+```bash
+# Check Python and Conda versions
+python --version        # Check Python version (3.12.11)
+conda --version         # Check Conda version
+
+# Manage conda environments
+ce                      # List all environments
+ca py312               # Activate Python 3.12 environment
+cc myenv python=3.11   # Create new environment with Python 3.11
+
+# Install packages
+ci numpy               # Install numpy with conda
+ci pandas matplotlib   # Install multiple packages
+ci -c conda-forge jupyter  # Install from specific channel
+
+# Search and manage packages
+csp tensorflow         # Search for packages
+cup numpy              # Update numpy
+cr pandas              # Remove pandas
+
+# Deactivate environment
+cda                    # Deactivate current environment
+```
+
 ## 💡 Pro Tips
 
 1. **Use fuzzy finders**: `fzf-open`, `nav`, `Ctrl+T` are much faster than traditional navigation
@@ -281,6 +319,9 @@ htop                    # Monitor system resources
 5. **System info**: Use `sysinfo` for quick system overview
 6. **Weather**: Use `weather` for quick weather checks
 7. **Backup**: Use `backup` before making important changes
+8. **Conda environments**: Use `ce` to see all environments, `ca` to activate
+9. **Python packages**: Use `ci` for conda installs, `csp` to search packages
+10. **Environment management**: Create project-specific environments with `cc`
 
 ---
 

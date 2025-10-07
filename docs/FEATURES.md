@@ -17,9 +17,10 @@ This document explains all the enhancements made to your Ghostty terminal, inclu
 9. [HTOP - Enhanced Process Viewer](#9-htop---enhanced-process-viewer)
 10. [Powerlevel10k - Beautiful Prompt](#10-powerlevel10k---beautiful-prompt)
 11. [Oh My Zsh Plugins](#11-oh-my-zsh-plugins)
-12. [Useful Aliases](#12-useful-aliases)
-13. [Custom Functions](#13-custom-functions)
-14. [Keyboard Shortcuts](#14-keyboard-shortcuts)
+12. [Conda Package Manager](#12-conda-package-manager)
+13. [Useful Aliases](#13-useful-aliases)
+14. [Custom Functions](#14-custom-functions)
+15. [Keyboard Shortcuts](#15-keyboard-shortcuts)
 
 ---
 
@@ -393,7 +394,130 @@ p10k configure          # Customize your prompt
 
 ---
 
-## 12. Useful Aliases
+## 12. Conda Package Manager
+
+### What is Conda?
+Conda is a powerful package manager and environment management system for Python and other languages. It helps you manage dependencies and create isolated environments for different projects.
+
+### What's Included
+- **Miniconda**: Lightweight Conda distribution
+- **Python 3.12**: Latest Python version in dedicated environment
+- **Auto-activation**: Python 3.12 environment activates automatically
+- **Conda aliases**: Short commands for common operations
+
+### Key Features
+
+#### Environment Management
+```bash
+# List all environments
+ce                      # Shows all conda environments
+
+# Activate/deactivate environments
+ca py312               # Activate Python 3.12 environment
+cda                    # Deactivate current environment
+
+# Create new environments
+cc myproject python=3.11  # Create new environment with Python 3.11
+cc data-science python=3.12 pandas numpy matplotlib  # Create with packages
+```
+
+#### Package Management
+```bash
+# Install packages
+ci numpy               # Install numpy
+ci pandas matplotlib   # Install multiple packages
+ci -c conda-forge jupyter  # Install from specific channel
+
+# Search packages
+csp tensorflow         # Search for packages
+csp "machine learning" # Search with keywords
+
+# Update packages
+cup numpy              # Update numpy
+cup --all              # Update all packages in environment
+
+# Remove packages
+cr pandas              # Remove pandas
+```
+
+#### Python Environment
+- **Default Python**: Python 3.12.11 is active by default
+- **Package isolation**: Each environment has its own packages
+- **Dependency management**: Conda handles complex dependencies automatically
+
+### How to Test
+```bash
+# Check versions
+python --version        # Should show Python 3.12.11
+conda --version         # Should show Conda version
+
+# List environments
+ce                      # Should show py312 as active
+
+# Test package installation
+ci requests            # Install requests package
+python -c "import requests; print('Success!')"  # Test import
+
+# Create test environment
+cc test-env python=3.11
+ca test-env
+python --version        # Should show Python 3.11
+cda                    # Deactivate test environment
+```
+
+### Benefits
+1. **Isolated environments**: Keep project dependencies separate
+2. **Easy package management**: Install complex packages with one command
+3. **Version control**: Use different Python versions for different projects
+4. **Dependency resolution**: Conda automatically resolves package conflicts
+5. **Cross-platform**: Same commands work on macOS, Linux, and Windows
+
+### Common Workflows
+
+#### Starting a New Project
+```bash
+# Create project directory
+mkcd my-new-project
+
+# Create conda environment
+cc my-new-project python=3.12
+
+# Activate environment
+ca my-new-project
+
+# Install required packages
+ci numpy pandas matplotlib jupyter
+
+# Start coding!
+code .                 # Open in VS Code
+```
+
+#### Working with Data Science
+```bash
+# Activate data science environment
+ca data-science
+
+# Install additional packages
+ci scikit-learn seaborn plotly
+
+# Start Jupyter
+jupyter notebook
+```
+
+#### Managing Multiple Projects
+```bash
+# List all environments
+ce
+
+# Switch between projects
+ca web-project         # Work on web project
+ca ml-project         # Switch to ML project
+ca data-analysis      # Switch to data analysis
+```
+
+---
+
+## 13. Useful Aliases
 
 ### Navigation Aliases
 ```bash
@@ -454,7 +578,7 @@ weather London          # Get weather for London
 
 ---
 
-## 13. Custom Functions
+## 14. Custom Functions
 
 ### File Operations
 ```bash
@@ -489,7 +613,7 @@ mkcd newproject         # Create and enter newproject directory
 
 ---
 
-## 14. Keyboard Shortcuts
+## 15. Keyboard Shortcuts
 
 ### FZF Shortcuts
 - **Ctrl+T**: Search and insert files

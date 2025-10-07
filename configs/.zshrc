@@ -64,6 +64,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM="$ZSH/custom"
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
@@ -223,10 +224,20 @@ alias egrep='egrep --color=auto'
 alias wget='wget -c'
 
 # Development shortcuts
-alias py='python3'
-alias pip='pip3'
-alias serve='python3 -m http.server'
-alias json='python3 -m json.tool'
+alias py='python'
+alias pip='pip'
+alias serve='python -m http.server'
+alias json='python -m json.tool'
+
+# Conda shortcuts
+alias ca='conda activate'
+alias cda='conda deactivate'
+alias ce='conda env list'
+alias ci='conda install'
+alias cc='conda create'
+alias cr='conda remove'
+alias cup='conda update'
+alias csp='conda search'
 
 # macOS specific
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
@@ -328,8 +339,15 @@ export EDITOR='code'
 export VISUAL='code'
 export BROWSER='open'
 
+# ===== CONDA INITIALIZATION =====
+# Initialize conda for zsh
+if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/miniconda3/etc/profile.d/conda.sh"
+else
+    export PATH="$HOME/miniconda3/bin:$PATH"
+fi
+
 # Add conda to PATH (keeping your existing conda setup)
-export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # ===== FZF CONFIGURATION =====
@@ -354,3 +372,21 @@ bindkey '\ec' fzf-cd-widget
 # ===== POWERLEVEL10K CONFIGURATION =====
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/shreyashgupta/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/shreyashgupta/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/shreyashgupta/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/shreyashgupta/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# Auto-activate Python 3.12 environment
+conda activate py312

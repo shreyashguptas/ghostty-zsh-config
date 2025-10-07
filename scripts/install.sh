@@ -86,6 +86,38 @@ brew install --cask font-jetbrains-mono-nerd-font
 
 print_success "All tools installed successfully"
 
+print_header "🐍 Setting Up Conda and Python 3.12"
+
+# Check if Conda is already installed
+if ! command -v conda &> /dev/null; then
+    print_status "Installing Miniconda..."
+    
+    # Download Miniconda installer
+    if [[ $(uname -m) == "arm64" ]]; then
+        curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+        bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda3
+        rm Miniconda3-latest-MacOSX-arm64.sh
+    else
+        curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+        bash Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/miniconda3
+        rm Miniconda3-latest-MacOSX-x86_64.sh
+    fi
+    
+    print_success "Miniconda installed"
+else
+    print_success "Conda already installed"
+fi
+
+# Initialize Conda for zsh
+print_status "Initializing Conda for zsh..."
+$HOME/miniconda3/bin/conda init zsh
+
+# Create Python 3.12 environment
+print_status "Creating Python 3.12 environment..."
+$HOME/miniconda3/bin/conda create -n py312 python=3.12 -y
+
+print_success "Conda and Python 3.12 setup complete"
+
 print_header "🔧 Setting Up Oh My Zsh"
 
 # Install Oh My Zsh if not already installed
@@ -187,7 +219,8 @@ echo "   ✅ Ghostty configuration with multi-line paste support"
 echo "   ✅ Oh My Zsh with Powerlevel10k theme"
 echo "   ✅ Essential plugins (autosuggestions, syntax highlighting, etc.)"
 echo "   ✅ Productivity tools (fzf, bat, eza, fd, ripgrep, lazygit, delta)"
-echo "   ✅ Useful aliases and functions"
+echo "   ✅ Conda package manager with Python 3.12 environment"
+echo "   ✅ Useful aliases and functions (including Conda shortcuts)"
 echo "   ✅ Beautiful prompt with git status and system info"
 echo ""
 echo -e "${CYAN}🔧 New features available:${NC}"
@@ -202,6 +235,8 @@ echo "   • Better 'grep' (now uses ripgrep)"
 echo "   • Git GUI with 'lg' (lazygit)"
 echo "   • System info with 'sysinfo'"
 echo "   • Weather with 'weather <city>'"
+echo "   • Conda package management with Python 3.12"
+echo "   • Conda shortcuts: ca, cda, ce, ci, cc, cr, cup, csp"
 echo ""
 echo -e "${YELLOW}🚀 Next steps:${NC}"
 echo "1. Restart your terminal or run: source ~/.zshrc"
