@@ -5,12 +5,14 @@ A comprehensive terminal enhancement setup for macOS using Ghostty terminal with
 ## ✨ What This Setup Provides
 
 - **Multi-line paste support** - No more "Are you sure?" prompts
-- **Beautiful terminal appearance** with Catppuccin theme and Nerd Fonts
+- **Dynamic theme support** - Automatic light/dark mode switching with high contrast colors
+- **Beautiful terminal appearance** with GitHub-inspired theme and Nerd Fonts
 - **Modern command-line tools** (eza, bat, fzf, fd, ripgrep, lazygit, delta)
 - **Enhanced shell experience** with Oh My Zsh and Powerlevel10k
-- **Conda package management** with Python 3.12 environment
+- **Conda package management** with Python 3.12 environment and visual indicators
 - **Productivity aliases and functions** for faster workflow
 - **Fuzzy finder integration** with keyboard shortcuts
+- **Theme management** - Easy switching between light and dark modes
 
 ## 🎯 Quick Start
 
@@ -83,26 +85,35 @@ chmod +x scripts/install.sh
    cp configs/.p10k.zsh ~/
    ```
 
-8. **Set up fzf**:
+8. **Set up theme switching**:
+   ```bash
+   # Make theme switching script executable
+   chmod +x scripts/switch-theme.sh
+   
+   # Auto-detect and apply theme
+   ./scripts/switch-theme.sh auto
+   ```
+
+9. **Set up fzf**:
    ```bash
    $(brew --prefix)/opt/fzf/install --all
    ```
 
-9. **Configure git delta**:
-   ```bash
-   git config --global core.pager delta
-   git config --global interactive.diffFilter 'delta --color-only'
-   git config --global delta.navigate true
-   git config --global delta.side-by-side true
-   git config --global delta.syntax-theme "Monokai Extended"
-   ```
+10. **Configure git delta**:
+    ```bash
+    git config --global core.pager delta
+    git config --global interactive.diffFilter 'delta --color-only'
+    git config --global delta.navigate true
+    git config --global delta.side-by-side true
+    git config --global delta.syntax-theme "Monokai Extended"
+    ```
 
-10. **Restart your terminal** or run:
+11. **Restart your terminal** or run:
     ```bash
     source ~/.zshrc
     ```
 
-11. **Configure your prompt**:
+12. **Configure your prompt**:
     ```bash
     p10k configure
     ```
@@ -113,12 +124,14 @@ chmod +x scripts/install.sh
 ghostty-zsh-config/
 ├── README.md                    # This file
 ├── configs/                     # Configuration files
-│   ├── ghostty.conf            # Ghostty terminal configuration
+│   ├── ghostty.conf            # Ghostty terminal configuration (dark mode)
+│   ├── ghostty-light.conf      # Ghostty terminal configuration (light mode)
 │   ├── .zshrc                  # ZSH configuration with aliases and functions
 │   └── .p10k.zsh              # Powerlevel10k prompt configuration
 ├── scripts/                     # Installation and utility scripts
 │   ├── install.sh              # Automated installation script
-│   └── update.sh               # Update all tools script
+│   ├── update.sh               # Update all tools script
+│   └── switch-theme.sh         # Theme switching script
 └── docs/                       # Documentation
     ├── FEATURES.md             # Detailed feature documentation
     ├── ALIASES.md              # Complete alias reference
@@ -169,6 +182,20 @@ ghostty-zsh-config/
 - `cr <package>` - Remove conda package
 - `cup <package>` - Update conda package
 - `csp <package>` - Search conda packages
+- `cinfo` - Show detailed conda environment information
+- `cact` - Interactive conda environment selection with fzf
+- `cca <env> [python_version]` - Create and activate new environment
+- `crem <env>` - Remove conda environment
+- `cpkg [env]` - List packages in environment
+- `cexp [env] [file]` - Export environment to requirements.txt
+
+### Theme Management
+- `theme` - Auto-detect and switch terminal theme
+- `theme-light` - Switch to light mode
+- `theme-dark` - Switch to dark mode
+- `theme-auto` - Auto-detect system theme
+- `theme-status` - Check current system theme
+- `reload` - Reload terminal configuration
 
 ### Custom Functions
 - `mkcd <dir>` - Create directory and cd into it
@@ -182,6 +209,42 @@ ghostty-zsh-config/
 - **[ALIASES.md](docs/ALIASES.md)** - Complete alias and function reference
 - **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
+## 🎨 Theme Management
+
+### Dynamic Theme Switching
+This setup includes automatic theme detection and switching:
+
+```bash
+# Auto-detect system theme and switch
+theme
+
+# Force specific themes
+theme-light    # Switch to light mode
+theme-dark     # Switch to dark mode
+theme-auto     # Auto-detect system theme
+
+# Check current theme
+theme-status
+```
+
+### Color Scheme Features
+- **High Contrast**: Optimized for readability in both light and dark modes
+- **GitHub-Inspired**: Professional color palette
+- **Git Integration**: Clear visual indicators for repository status
+- **Conda Environment**: Visual display of active Python environments
+- **Directory Paths**: High-contrast blue background with white text
+
+### Manual Theme Switching
+```bash
+# Use the standalone script
+./scripts/switch-theme.sh [light|dark|auto]
+
+# Or use the ZSH functions
+switch_theme light
+switch_theme dark
+switch_theme auto
+```
+
 ## 🔧 Customization
 
 ### Customizing the Prompt
@@ -194,6 +257,11 @@ Edit `~/.zshrc` and add your aliases in the "USEFUL ALIASES" section.
 
 ### Customizing Ghostty
 Edit `~/.config/ghostty/ghostty.conf` to modify terminal appearance and behavior.
+
+### Customizing Themes
+- **Dark Mode**: Edit `configs/ghostty.conf`
+- **Light Mode**: Edit `configs/ghostty-light.conf`
+- **Prompt Colors**: Edit `configs/.p10k.zsh`
 
 ## 🚀 Quick Commands
 

@@ -132,6 +132,34 @@ This document provides a comprehensive reference for all aliases and functions a
 | `cr` | `conda remove` | Remove conda package |
 | `cup` | `conda update` | Update conda package |
 | `csp` | `conda search` | Search conda packages |
+| `ccl` | `conda clean --all` | Clean all conda cache |
+| `cci` | `conda clean --index-cache` | Clean conda index cache |
+| `ccp` | `conda clean --packages` | Clean conda packages |
+| `cct` | `conda clean --tarballs` | Clean conda tarballs |
+| `ccf` | `conda clean --force-pkgs-dirs` | Force clean conda package directories |
+
+## 🐍 Conda Functions
+
+| Function | Description | Usage |
+|----------|-------------|-------|
+| `conda_info` | Show detailed conda environment information | `cinfo` |
+| `conda_activate` | Interactive conda environment selection with fzf | `cact` |
+| `conda_create_activate` | Create and activate new conda environment | `cca <env_name> [python_version]` |
+| `conda_remove_env` | Remove conda environment safely | `crem <env_name>` |
+| `conda_packages` | List packages in conda environment | `cpkg [env_name]` |
+| `conda_export` | Export conda environment to requirements.txt | `cexp [env_name] [filename]` |
+
+## 🎨 Theme Management
+
+| Alias/Function | Description | Usage |
+|----------------|-------------|-------|
+| `theme` | Auto-detect and switch terminal theme | `theme` |
+| `theme-light` | Switch to light mode | `theme-light` |
+| `theme-dark` | Switch to dark mode | `theme-dark` |
+| `theme-auto` | Auto-detect system theme | `theme-auto` |
+| `theme-status` | Check current system theme | `theme-status` |
+| `reload` | Reload terminal configuration | `reload` |
+| `switch_theme` | Switch to specific theme | `switch_theme [light\|dark\|auto]` |
 
 ## 🍎 macOS Specific Aliases
 

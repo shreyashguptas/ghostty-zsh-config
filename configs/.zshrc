@@ -139,8 +139,23 @@ setopt INC_APPEND_HISTORY
 
 # Auto-completion
 autoload -U compinit && compinit
+
+# Enhanced completion settings
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors 'di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+
+# Partial completion
+zstyle ':completion:*' list-suffixes true
+zstyle ':completion:*' expand prefix suffix
 
 # ===== USEFUL ALIASES =====
 
@@ -238,6 +253,33 @@ alias cc='conda create'
 alias cr='conda remove'
 alias cup='conda update'
 alias csp='conda search'
+alias ccl='conda clean --all'
+alias cci='conda clean --index-cache'
+alias ccp='conda clean --packages'
+alias cct='conda clean --tarballs'
+alias ccf='conda clean --force-pkgs-dirs'
+
+# Additional conda function aliases
+alias cinfo='conda_info'
+alias cact='conda_activate'
+alias cca='conda_create_activate'
+alias crem='conda_remove_env'
+alias cpkg='conda_packages'
+alias cexp='conda_export'
+
+# Theme management aliases
+alias theme='switch_terminal_theme'
+alias theme-light='switch_theme light'
+alias theme-dark='switch_theme dark'
+alias theme-auto='switch_theme auto'
+alias light='switch_theme light'
+alias dark='switch_theme dark'
+alias reload='reload_terminal'
+alias theme-status='echo "🌙 Current system theme: $(is_dark_mode && echo "Dark" || echo "Light")"'
+
+# Help aliases
+alias autocomplete-help='autocomplete_help'
+alias ac-help='autocomplete_help'
 
 # macOS specific
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
@@ -334,6 +376,170 @@ nav() {
     dir=$(find . -type d -not -path '*/\.*' | fzf) && cd "$dir"
 }
 
+# ===== THEME MANAGEMENT FUNCTIONS =====
+
+# Function to detect macOS appearance mode
+is_dark_mode() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        local mode=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+        [[ "$mode" == "Dark" ]]
+    else
+        # Default to dark mode for non-macOS systems
+        return 0
+    fi
+}
+
+# Function to switch terminal colors based on system theme
+switch_terminal_theme() {
+    local config_dir="$(dirname "$0")/configs"
+    local ghostty_config_dir="$HOME/.config/ghostty"
+    
+    # Create ghostty config directory if it doesn't exist
+    mkdir -p "$ghostty_config_dir"
+    
+    if is_dark_mode; then
+        # Dark mode colors
+        echo "🌙 Switching to dark mode colors..."
+        cp "$config_dir/ghostty.conf" "$ghostty_config_dir/ghostty.conf"
+        echo "✅ Dark mode configuration applied!"
+    else
+        # Light mode colors  
+        echo "☀️ Switching to light mode colors..."
+        cp "$config_dir/ghostty-light.conf" "$ghostty_config_dir/ghostty.conf"
+        echo "✅ Light mode configuration applied!"
+    fi
+    echo "💡 Restart Ghostty to see the changes"
+}
+
+# Function to switch to specific theme
+switch_theme() {
+    local theme="${1:-auto}"
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local switch_script="$script_dir/../scripts/switch-theme.sh"
+    
+    if [[ -f "$switch_script" ]]; then
+        bash "$switch_script" "$theme"
+    else
+        echo "❌ Theme switching script not found at: $switch_script"
+        echo "💡 Make sure you're running this from the correct directory"
+    fi
+}
+
+# Function to switch to specific theme
+switch_to_light() {
+    local config_dir="$(dirname "$0")/configs"
+    local ghostty_config_dir="$HOME/.config/ghostty"
+    mkdir -p "$ghostty_config_dir"
+    cp "$config_dir/ghostty-light.conf" "$ghostty_config_dir/ghostty.conf"
+    echo "☀️ Switched to light mode! Restart Ghostty to see changes."
+}
+
+switch_to_dark() {
+    local config_dir="$(dirname "$0")/configs"
+    local ghostty_config_dir="$HOME/.config/ghostty"
+    mkdir -p "$ghostty_config_dir"
+    cp "$config_dir/ghostty.conf" "$ghostty_config_dir/ghostty.conf"
+    echo "🌙 Switched to dark mode! Restart Ghostty to see changes."
+}
+
+# Function to reload terminal configuration
+reload_terminal() {
+    echo "🔄 Reloading terminal configuration..."
+    # Reload ZSH configuration
+    source ~/.zshrc
+    echo "✅ ZSH configuration reloaded!"
+    echo "💡 Restart Ghostty to apply new color scheme"
+}
+
+# Function to explain autocomplete and autosuggestion usage
+autocomplete_help() {
+    echo "🔍 Autocomplete and Autosuggestion Guide"
+    echo "========================================"
+    echo ""
+    echo "📝 AUTOSUGGESTIONS (gray text that appears as you type):"
+    echo "  • Right Arrow (→)     - Accept character by character"
+    echo "  • End key             - Accept entire suggestion"
+    echo "  • Ctrl+Right Arrow    - Accept word by word"
+    echo "  • Ctrl+End            - Accept entire suggestion"
+    echo ""
+    echo "⌨️  TAB COMPLETION (press Tab to see options):"
+    echo "  • Tab                 - Show completion menu"
+    echo "  • Tab Tab             - Cycle through options"
+    echo "  • Enter               - Select highlighted option"
+    echo "  • Esc                 - Cancel completion"
+    echo ""
+    echo "💡 TIPS:"
+    echo "  • Autosuggestions are based on your command history"
+    echo "  • Tab completion shows available commands/files"
+    echo "  • Use Right Arrow to accept autosuggestions"
+    echo "  • Use Tab to see completion options"
+    echo ""
+    echo "🧪 TRY THIS:"
+    echo "  1. Type 'git ' and press Tab to see git commands"
+    echo "  2. Type 'ls ' and press Tab to see files/directories"
+    echo "  3. Type 'conda ' and press Right Arrow to accept suggestion"
+}
+
+# ===== CONDA FUNCTIONS =====
+
+# Show current conda environment info
+conda_info() {
+    echo "=== Conda Environment Information ==="
+    echo "Current environment: $(conda info --envs | grep '*' | awk '{print $1}')"
+    echo "Python version: $(python --version 2>/dev/null || echo 'Not available')"
+    echo "Conda version: $(conda --version)"
+    echo ""
+    echo "Available environments:"
+    conda env list
+}
+
+# Quick conda environment activation with fzf
+conda_activate() {
+    local env
+    env=$(conda env list | grep -v '^#' | awk '{print $1}' | fzf --height=40% --reverse)
+    [ -n "$env" ] && conda activate "$env"
+}
+
+# Create and activate a new conda environment
+conda_create_activate() {
+    if [ -z "$1" ]; then
+        echo "Usage: conda_create_activate <env_name> [python_version]"
+        return 1
+    fi
+    local env_name="$1"
+    local python_version="${2:-3.12}"
+    conda create -n "$env_name" python="$python_version" -y
+    conda activate "$env_name"
+    echo "Created and activated environment: $env_name with Python $python_version"
+}
+
+# Deactivate and remove conda environment
+conda_remove_env() {
+    if [ -z "$1" ]; then
+        echo "Usage: conda_remove_env <env_name>"
+        return 1
+    fi
+    local env_name="$1"
+    conda deactivate 2>/dev/null || true
+    conda env remove -n "$env_name"
+    echo "Removed environment: $env_name"
+}
+
+# Show conda environment packages
+conda_packages() {
+    local env="${1:-$(conda info --envs | grep '*' | awk '{print $1}')}"
+    echo "=== Packages in environment: $env ==="
+    conda list -n "$env"
+}
+
+# Export conda environment to requirements.txt
+conda_export() {
+    local env="${1:-$(conda info --envs | grep '*' | awk '{print $1}')}"
+    local filename="${2:-requirements.txt}"
+    conda list -n "$env" --export > "$filename"
+    echo "Exported environment $env to $filename"
+}
+
 # ===== ENVIRONMENT VARIABLES =====
 export EDITOR='code'
 export VISUAL='code'
@@ -368,6 +574,25 @@ bindkey '^T' fzf-file-widget
 
 # Bind Alt+C to fzf directory search
 bindkey '\ec' fzf-cd-widget
+
+# ===== AUTOCOMPLETE AND AUTOSUGGESTION KEY BINDINGS =====
+# Enhanced Tab completion - Tab will complete what you're typing
+bindkey '^I' complete-word
+
+# Accept autosuggestion with Right Arrow (character by character)
+bindkey '^[[C' forward-char
+
+# Accept autosuggestion with End key (accept entire suggestion)
+bindkey '^[[F' end-of-line
+
+# Accept autosuggestion with Ctrl+Right Arrow (word by word)
+bindkey '^[[1;5C' forward-word
+
+# Accept autosuggestion with Ctrl+End (accept entire suggestion)
+bindkey '^[[1;5F' end-of-line
+
+# Better completion behavior
+bindkey '^I' expand-or-complete-prefix
 
 # ===== POWERLEVEL10K CONFIGURATION =====
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

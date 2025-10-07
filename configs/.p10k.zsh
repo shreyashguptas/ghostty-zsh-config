@@ -38,8 +38,8 @@
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
+    anaconda                # conda environment (prioritized over virtualenv)
     virtualenv              # python virtual environment
-    anaconda                # conda environment
     pyenv                   # python environment
     nodenv                  # node.js version from nodenv
     nvm                     # node.js version from nvm
@@ -87,6 +87,67 @@
   # Add an empty line before each prompt except the first. This doesn't emulate the bug
   # in Zsh <= 5.1.1 where all prompts after the first one are indented.
   typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+
+  # ===== CONDA ENVIRONMENT CONFIGURATION =====
+  # Show conda environment in the prompt
+  typeset -g POWERLEVEL9K_ANACONDA_SHOW_PYTHON_VERSION=false
+  typeset -g POWERLEVEL9K_ANACONDA_LEFT_DELIMITER='('
+  typeset -g POWERLEVEL9K_ANACONDA_RIGHT_DELIMITER=')'
+  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=15
+  typeset -g POWERLEVEL9K_ANACONDA_BACKGROUND=2
+  typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION='🐍'
+
+  # ===== ENHANCED COLOR SCHEME =====
+  # Directory colors - better contrast for both light and dark modes
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=15
+  typeset -g POWERLEVEL9K_DIR_BACKGROUND=4
+  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=15
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=15
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
+
+  # Git colors - high contrast and readable
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=2
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=0
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=3
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=0
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=3
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=0
+  typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=8
+  typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=0
+
+  # Status colors
+  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
+  typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=0
+  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=0
+
+  # Command execution time
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=8
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=0
+
+  # Background jobs
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=3
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=0
+
+  # Python virtual environment
+  typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=15
+  typeset -g POWERLEVEL9K_VIRTUALENV_BACKGROUND=5
+
+  # Node.js version
+  typeset -g POWERLEVEL9K_NODE_VERSION_FOREGROUND=15
+  typeset -g POWERLEVEL9K_NODE_VERSION_BACKGROUND=2
+
+  # Go version
+  typeset -g POWERLEVEL9K_GO_VERSION_FOREGROUND=15
+  typeset -g POWERLEVEL9K_GO_VERSION_BACKGROUND=6
+
+  # Rust version
+  typeset -g POWERLEVEL9K_RUST_VERSION_FOREGROUND=15
+  typeset -g POWERLEVEL9K_RUST_VERSION_BACKGROUND=1
+
+  # Java version
+  typeset -g POWERLEVEL9K_JAVA_VERSION_FOREGROUND=15
+  typeset -g POWERLEVEL9K_JAVA_VERSION_BACKGROUND=3
 
   # Ruler, a.k.a. the horizontal line before each prompt.
   typeset -g POWERLEVEL9K_SHOW_RULER=false

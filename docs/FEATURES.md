@@ -18,9 +18,10 @@ This document explains all the enhancements made to your Ghostty terminal, inclu
 10. [Powerlevel10k - Beautiful Prompt](#10-powerlevel10k---beautiful-prompt)
 11. [Oh My Zsh Plugins](#11-oh-my-zsh-plugins)
 12. [Conda Package Manager](#12-conda-package-manager)
-13. [Useful Aliases](#13-useful-aliases)
-14. [Custom Functions](#14-custom-functions)
-15. [Keyboard Shortcuts](#15-keyboard-shortcuts)
+13. [Theme Management](#13-theme-management)
+14. [Useful Aliases](#14-useful-aliases)
+15. [Custom Functions](#15-custom-functions)
+16. [Keyboard Shortcuts](#16-keyboard-shortcuts)
 
 ---
 
@@ -517,7 +518,100 @@ ca data-analysis      # Switch to data analysis
 
 ---
 
-## 13. Useful Aliases
+## 13. Theme Management
+
+### What is Theme Management?
+This setup includes dynamic theme switching that automatically adapts to your macOS system theme, providing optimal readability in both light and dark modes.
+
+### Key Features
+- **Automatic Detection**: Detects macOS system theme and switches accordingly
+- **High Contrast Colors**: Optimized for readability in both light and dark modes
+- **GitHub-Inspired Palette**: Professional color scheme
+- **Git Integration**: Clear visual indicators for repository status
+- **Conda Environment Display**: Visual indicators for active Python environments
+
+### Theme Switching Commands
+
+#### Automatic Theme Detection
+```bash
+# Auto-detect system theme and switch
+theme
+
+# Check current system theme
+theme-status
+```
+
+#### Manual Theme Switching
+```bash
+# Switch to specific themes
+theme-light    # Force light mode
+theme-dark     # Force dark mode
+theme-auto     # Auto-detect system theme
+
+# Using the standalone script
+./scripts/switch-theme.sh light
+./scripts/switch-theme.sh dark
+./scripts/switch-theme.sh auto
+```
+
+### Color Scheme Features
+
+#### Dark Mode (Default)
+- **Background**: GitHub dark theme (`#0d1117`)
+- **Text**: High-contrast light text (`#e6edf3`)
+- **Directory**: Blue background with white text
+- **Git Status**: Green for clean, yellow for modified
+- **Conda Environment**: Green background with white text
+
+#### Light Mode
+- **Background**: Clean white (`#ffffff`)
+- **Text**: Dark text (`#24292f`)
+- **Directory**: Blue background with white text
+- **Git Status**: Dark green for clean, dark yellow for modified
+- **Conda Environment**: Green background with white text
+
+### Configuration Files
+- **Dark Mode**: `configs/ghostty.conf`
+- **Light Mode**: `configs/ghostty-light.conf`
+- **Prompt Colors**: `configs/.p10k.zsh`
+
+### How to Use
+
+#### Initial Setup
+```bash
+# Copy configuration files
+cp configs/ghostty.conf ~/.config/ghostty/
+cp configs/.zshrc ~/
+cp configs/.p10k.zsh ~/
+
+# Make theme script executable
+chmod +x scripts/switch-theme.sh
+
+# Auto-detect and apply theme
+./scripts/switch-theme.sh auto
+```
+
+#### Daily Usage
+```bash
+# Check current theme
+theme-status
+
+# Switch themes as needed
+theme-light    # For bright environments
+theme-dark     # For dark environments
+theme          # Auto-detect and switch
+```
+
+### Benefits
+1. **Better Readability**: High contrast colors in both modes
+2. **Automatic Adaptation**: Switches with your system theme
+3. **Professional Appearance**: GitHub-inspired color palette
+4. **Clear Visual Hierarchy**: Different colors for different information types
+5. **Accessibility**: High contrast ratios for better accessibility
+
+---
+
+## 14. Useful Aliases
 
 ### Navigation Aliases
 ```bash
