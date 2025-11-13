@@ -1,0 +1,19 @@
+# SSH Configuration for Ghostty Terminal Compatibility
+# Copy this file to ~/.ssh/config (or merge with existing config)
+# This ensures TERM environment variable is passed through SSH connections
+
+# Global settings for all hosts
+Host *
+    # Send TERM environment variable to remote host
+    # This ensures terminal compatibility when SSHing from Ghostty
+    SendEnv TERM
+    # Also send LANG for proper locale support
+    SendEnv LANG
+    # Keep connections alive
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+# Note: Some servers may have AcceptEnv restrictions
+# If TERM is not being passed, you may need to add this to the remote server's
+# /etc/ssh/sshd_config (requires root access):
+#   AcceptEnv TERM LANG

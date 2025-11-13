@@ -101,6 +101,25 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+# ===== TERMINAL COMPATIBILITY FOR SSH =====
+# Fix Ghostty terminal compatibility when SSHing into remote devices
+# Ghostty reports itself as "Ghostty" which remote systems don't recognize
+# Set TERM to a compatible value that works everywhere
+if [[ -n "$TERM_PROGRAM" ]] && [[ "$TERM_PROGRAM" == "Ghostty" ]]; then
+    # We're running in Ghostty terminal
+    # Set TERM to xterm-256color which is widely supported by remote systems
+    export TERM="xterm-256color"
+elif [[ "$TERM" == "Ghostty" ]] || [[ "$TERM" == *"ghostty"* ]]; then
+    # Fallback: check if TERM itself contains ghostty
+    export TERM="xterm-256color"
+fi
+
+# Ensure TERM is set even if not detected above (for SSH sessions)
+# This ensures compatibility when SSHing from Ghostty to remote systems
+if [[ -z "$TERM" ]] || [[ "$TERM" == "unknown" ]]; then
+    export TERM="xterm-256color"
+fi
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment

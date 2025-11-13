@@ -113,7 +113,54 @@ cp ~/Documents/GitHub/ghostty-zsh-config/configs/ghostty.conf ~/.config/ghostty/
 # The configuration should take effect immediately
 ```
 
-### 7. Aliases Not Working
+### 7. SSH Terminal Compatibility Issues
+
+**Problem**: When SSHing into remote devices, you see errors like "extern Ghostty unknown unknown terminal type" or commands like `clear` don't work properly.
+
+**Solutions**:
+```bash
+# Check current TERM variable
+echo $TERM
+
+# The .zshrc configuration should automatically set TERM to xterm-256color
+# If it's not working, reload your configuration
+source ~/.zshrc
+
+# Verify TERM is set correctly
+echo $TERM
+# Should show: xterm-256color
+
+# For SSH connections, ensure TERM is passed through
+# Copy the SSH config template (optional but recommended)
+mkdir -p ~/.ssh
+cp ~/Documents/GitHub/ghostty-zsh-config/configs/ssh_config ~/.ssh/config
+
+# Or manually add to ~/.ssh/config:
+# Host *
+#     SendEnv TERM
+```
+
+**What This Fixes**:
+- Ghostty terminal reports itself as "Ghostty" which remote systems don't recognize
+- The configuration automatically sets TERM to `xterm-256color` which is widely supported
+- This ensures commands like `clear`, `vim`, `nano`, etc. work correctly over SSH
+- Multi-line pasting and other terminal features work the same way on remote systems
+
+**Testing**:
+```bash
+# SSH into a remote device
+ssh user@remote-host
+
+# After connecting, check TERM
+echo $TERM
+# Should show: xterm-256color
+
+# Test commands
+clear  # Should work without errors
+vim    # Should open properly
+```
+
+### 8. Aliases Not Working
 
 **Problem**: Custom aliases like `ll`, `lg`, etc. are not working.
 
@@ -129,7 +176,7 @@ source ~/.zshrc
 grep "alias ll" ~/.zshrc
 ```
 
-### 8. Git Delta Not Working
+### 9. Git Delta Not Working
 
 **Problem**: Git diffs are not showing with delta highlighting.
 
@@ -148,7 +195,7 @@ git config --global delta.side-by-side true
 git config --global delta.syntax-theme "Monokai Extended"
 ```
 
-### 9. Tools Not Found (bat, eza, fd, etc.)
+### 10. Tools Not Found (bat, eza, fd, etc.)
 
 **Problem**: Commands like `bat`, `eza`, `fd` are not found.
 
@@ -170,7 +217,7 @@ echo $PATH
 # For Intel: /usr/local/bin
 ```
 
-### 10. Slow Terminal Startup
+### 11. Slow Terminal Startup
 
 **Problem**: Terminal takes a long time to start.
 

@@ -5,6 +5,7 @@ A comprehensive terminal enhancement setup for macOS using Ghostty terminal with
 ## ✨ What This Setup Provides
 
 - **Multi-line paste support** - No more "Are you sure?" prompts
+- **SSH terminal compatibility** - Works seamlessly when SSHing into remote devices (no more "unknown terminal type" errors)
 - **Dynamic theme support** - Automatic light/dark mode switching with high contrast colors
 - **Beautiful terminal appearance** with GitHub-inspired theme and Nerd Fonts
 - **Modern command-line tools** (eza, bat, fzf, fd, ripgrep, lazygit, delta)
@@ -127,7 +128,8 @@ ghostty-zsh-config/
 │   ├── ghostty.conf            # Ghostty terminal configuration (dark mode)
 │   ├── ghostty-light.conf      # Ghostty terminal configuration (light mode)
 │   ├── .zshrc                  # ZSH configuration with aliases and functions
-│   └── .p10k.zsh              # Powerlevel10k prompt configuration
+│   ├── .p10k.zsh              # Powerlevel10k prompt configuration
+│   └── ssh_config              # SSH config template for terminal compatibility
 ├── scripts/                     # Installation and utility scripts
 │   ├── install.sh              # Automated installation script
 │   ├── update.sh               # Update all tools script
@@ -308,6 +310,29 @@ Or manually:
 ```bash
 brew update && brew upgrade
 ```
+
+## 🔌 SSH Terminal Compatibility
+
+This configuration automatically fixes terminal compatibility issues when SSHing into remote devices. Ghostty terminal reports itself as "Ghostty" which remote systems don't recognize, causing errors like "unknown terminal type" and breaking commands like `clear`.
+
+**Automatic Fix**: The `.zshrc` configuration automatically detects Ghostty and sets `TERM=xterm-256color`, which is widely supported by remote systems.
+
+**Optional SSH Config**: For best results, you can copy the SSH config template:
+```bash
+mkdir -p ~/.ssh
+cp configs/ssh_config ~/.ssh/config
+```
+
+This ensures the TERM variable is properly passed through SSH connections.
+
+**Testing**: After SSHing into a remote device, verify it works:
+```bash
+ssh user@remote-host
+echo $TERM  # Should show: xterm-256color
+clear       # Should work without errors
+```
+
+See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for more details.
 
 ## 🐛 Troubleshooting
 
