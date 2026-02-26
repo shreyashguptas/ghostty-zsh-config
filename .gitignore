@@ -29,3 +29,8 @@ temp/
 # Local configuration overrides
 local.zsh
 local.conf
+
+# Installers / large binaries
+*.sh.bak
+Miniconda*.sh
+Anaconda*.sh

@@ -88,21 +88,21 @@ print_success "All tools installed successfully"
 
 print_header "🐍 Setting Up Conda and Python 3.12"
 
-# Check if Conda is already installed
-if ! command -v conda &> /dev/null; then
+# Check if Conda is already installed (check both command and directory)
+if ! command -v conda &> /dev/null && [ ! -d "$HOME/miniconda3" ]; then
     print_status "Installing Miniconda..."
-    
+
     # Download Miniconda installer
     if [[ $(uname -m) == "arm64" ]]; then
         curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
         bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda3
-        rm Miniconda3-latest-MacOSX-arm64.sh
+        rm -f Miniconda3-latest-MacOSX-arm64.sh
     else
         curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
         bash Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/miniconda3
-        rm Miniconda3-latest-MacOSX-x86_64.sh
+        rm -f Miniconda3-latest-MacOSX-x86_64.sh
     fi
-    
+
     print_success "Miniconda installed"
 else
     print_success "Conda already installed"
@@ -112,9 +112,18 @@ fi
 print_status "Initializing Conda for zsh..."
 $HOME/miniconda3/bin/conda init zsh
 
-# Create Python 3.12 environment
-print_status "Creating Python 3.12 environment..."
-$HOME/miniconda3/bin/conda create -n py312 python=3.12 -y
+# Accept Conda Terms of Service (required for Anaconda channels)
+print_status "Accepting Conda Terms of Service..."
+$HOME/miniconda3/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main 2>/dev/null || true
+$HOME/miniconda3/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r 2>/dev/null || true
+
+# Create Python 3.12 environment (skip if already exists)
+if $HOME/miniconda3/bin/conda env list | grep -q "^py312 "; then
+    print_success "Python 3.12 environment already exists"
+else
+    print_status "Creating Python 3.12 environment..."
+    $HOME/miniconda3/bin/conda create -n py312 python=3.12 -y
+fi
 
 print_success "Conda and Python 3.12 setup complete"
 
