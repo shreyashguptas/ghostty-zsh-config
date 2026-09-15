@@ -243,10 +243,16 @@ weather() {
 
 # Quick backup
 backup() {
-    cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
+    command cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
 }
 
 # ===== THEME MANAGEMENT FUNCTIONS =====
+# Ghostty reads ~/.config/ghostty/config (a file literally named "config").
+# install.sh drops both palettes into ~/.config/ghostty/themes/, so switching is
+# just a copy — it does not need the repo to be checked out or the cwd to be
+# anywhere in particular.
+GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
+GHOSTTY_THEME_DIR="$GHOSTTY_CONFIG_DIR/themes"
 
 # Function to detect macOS appearance mode
 is_dark_mode() {
@@ -259,57 +265,61 @@ is_dark_mode() {
     fi
 }
 
-# Function to switch terminal colors based on system theme
-switch_terminal_theme() {
-    local config_dir="$(dirname "$0")/configs"
-    local ghostty_config_dir="$HOME/.config/ghostty"
+# Apply one of the installed palettes (dark|light)
+_apply_ghostty_theme() {
+    local theme="$1"
+    local src="$GHOSTTY_THEME_DIR/$theme.conf"
 
-    # Create ghostty config directory if it doesn't exist
-    mkdir -p "$ghostty_config_dir"
-
-    if is_dark_mode; then
-        # Dark mode colors
-        echo "🌙 Switching to dark mode colors..."
-        cp "$config_dir/ghostty.conf" "$ghostty_config_dir/ghostty.conf"
-        echo "✅ Dark mode configuration applied!"
-    else
-        # Light mode colors
-        echo "☀️ Switching to light mode colors..."
-        cp "$config_dir/ghostty-light.conf" "$ghostty_config_dir/ghostty.conf"
-        echo "✅ Light mode configuration applied!"
+    if [[ ! -f "$src" ]]; then
+        echo "❌ Theme file not found: $src"
+        echo "💡 Run ./scripts/install.sh to install the theme files"
+        return 1
     fi
-    echo "💡 Restart Ghostty to see the changes"
+
+    # `command` bypasses the cp -i / mkdir -pv aliases defined above, which are
+    # baked into this function body at definition time and would otherwise
+    # prompt "overwrite?" on every theme switch after the first.
+    command mkdir -p "$GHOSTTY_CONFIG_DIR"
+    command cp "$src" "$GHOSTTY_CONFIG_DIR/config" || return 1
+
+    if [[ "$theme" == "dark" ]]; then
+        echo "🌙 Switched to dark mode!"
+    else
+        echo "☀️ Switched to light mode!"
+    fi
+    echo "💡 Press Cmd+Shift+, in Ghostty to reload, or restart it"
 }
 
-# Function to switch to specific theme
+# Switch to a specific theme: light, dark, or auto (follow macOS)
 switch_theme() {
-    local theme="${1:-auto}"
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    local switch_script="$script_dir/../scripts/switch-theme.sh"
-
-    if [[ -f "$switch_script" ]]; then
-        bash "$switch_script" "$theme"
-    else
-        echo "❌ Theme switching script not found at: $switch_script"
-        echo "💡 Make sure you're running this from the correct directory"
-    fi
+    case "${1:-auto}" in
+        light) _apply_ghostty_theme light ;;
+        dark)  _apply_ghostty_theme dark  ;;
+        auto)
+            if is_dark_mode; then
+                _apply_ghostty_theme dark
+            else
+                _apply_ghostty_theme light
+            fi
+            ;;
+        *)
+            echo "Usage: switch_theme [light|dark|auto]"
+            return 1
+            ;;
+    esac
 }
 
-# Function to switch to specific theme
+# Follow whatever macOS is currently set to
+switch_terminal_theme() {
+    switch_theme auto
+}
+
 switch_to_light() {
-    local config_dir="$(dirname "$0")/configs"
-    local ghostty_config_dir="$HOME/.config/ghostty"
-    mkdir -p "$ghostty_config_dir"
-    cp "$config_dir/ghostty-light.conf" "$ghostty_config_dir/ghostty.conf"
-    echo "☀️ Switched to light mode! Restart Ghostty to see changes."
+    _apply_ghostty_theme light
 }
 
 switch_to_dark() {
-    local config_dir="$(dirname "$0")/configs"
-    local ghostty_config_dir="$HOME/.config/ghostty"
-    mkdir -p "$ghostty_config_dir"
-    cp "$config_dir/ghostty.conf" "$ghostty_config_dir/ghostty.conf"
-    echo "🌙 Switched to dark mode! Restart Ghostty to see changes."
+    _apply_ghostty_theme dark
 }
 
 # Function to reload terminal configuration

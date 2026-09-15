@@ -16,6 +16,8 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$(dirname "$SCRIPT_DIR")/configs"
 GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
+# Ghostty reads a file literally named "config" — not "ghostty.conf".
+GHOSTTY_CONFIG_FILE="$GHOSTTY_CONFIG_DIR/config"
 
 # Function to detect macOS appearance mode
 is_dark_mode() {
@@ -33,10 +35,10 @@ switch_to_dark() {
     echo -e "${BLUE}🌙 Switching to dark mode...${NC}"
     
     # Copy dark mode config
-    cp "$CONFIG_DIR/ghostty.conf" "$GHOSTTY_CONFIG_DIR/ghostty.conf"
+    cp "$CONFIG_DIR/ghostty.conf" "$GHOSTTY_CONFIG_FILE"
     
     echo -e "${GREEN}✅ Dark mode configuration applied!${NC}"
-    echo -e "${YELLOW}💡 Restart Ghostty to see the changes${NC}"
+    echo -e "${YELLOW}💡 Press Cmd+Shift+, in Ghostty to reload, or restart it${NC}"
 }
 
 # Function to switch to light mode
@@ -44,10 +46,10 @@ switch_to_light() {
     echo -e "${BLUE}☀️ Switching to light mode...${NC}"
     
     # Copy light mode config
-    cp "$CONFIG_DIR/ghostty-light.conf" "$GHOSTTY_CONFIG_DIR/ghostty.conf"
+    cp "$CONFIG_DIR/ghostty-light.conf" "$GHOSTTY_CONFIG_FILE"
     
     echo -e "${GREEN}✅ Light mode configuration applied!${NC}"
-    echo -e "${YELLOW}💡 Restart Ghostty to see the changes${NC}"
+    echo -e "${YELLOW}💡 Press Cmd+Shift+, in Ghostty to reload, or restart it${NC}"
 }
 
 # Function to auto-detect and switch

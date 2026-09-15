@@ -32,6 +32,10 @@ cd ghostty-zsh-config
 # Run the automated setup script
 chmod +x scripts/install.sh
 ./scripts/install.sh
+
+# Conda is optional and off by default (~400MB, adds shell startup time).
+# Add it only if you want it:
+./scripts/install.sh --with-conda
 ```
 
 ### Manual Installation
@@ -51,7 +55,7 @@ chmod +x scripts/install.sh
    brew install --cask font-jetbrains-mono-nerd-font
    ```
 
-4. **Install Conda and Python 3.12**:
+4. **Install Conda and Python 3.12** (optional — skip if you don't use conda):
    ```bash
    # Download and install Miniconda
    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
@@ -80,7 +84,12 @@ chmod +x scripts/install.sh
 
 7. **Copy configuration files**:
    ```bash
-   cp configs/ghostty.conf ~/.config/ghostty/
+   # Ghostty reads a file literally named "config" — not "ghostty.conf".
+   mkdir -p ~/.config/ghostty/themes
+   cp configs/ghostty.conf       ~/.config/ghostty/themes/dark.conf
+   cp configs/ghostty-light.conf ~/.config/ghostty/themes/light.conf
+   cp ~/.config/ghostty/themes/dark.conf ~/.config/ghostty/config
+
    cp configs/.zshrc ~/
    cp configs/.p10k.zsh ~/
    ```
@@ -136,7 +145,7 @@ ghostty-zsh-config/
 
 ### Other
 - **JetBrains Mono Nerd Font** - Supplies the prompt glyphs
-- **Conda** - Package manager with Python 3.12 environment
+- **Conda** - Optional (`--with-conda`), with a Python 3.12 environment
 
 Only four Oh My Zsh plugins are enabled (`git`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-completions`) to keep shell startup fast.
 

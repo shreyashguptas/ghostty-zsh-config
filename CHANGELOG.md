@@ -42,6 +42,25 @@ All notable changes to this project will be documented in this file.
   environment is missing
 - Removed the redundant second `compinit` call (Oh My Zsh already runs it)
 
+### Fixed
+- **Ghostty theme was never applied.** Every script wrote
+  `~/.config/ghostty/ghostty.conf`, but Ghostty reads a file literally named
+  `config`. `install.sh`, `switch-theme.sh` and the shell functions now write
+  `~/.config/ghostty/config`.
+- **Theme functions could not find their source files.** `switch_terminal_theme`,
+  `switch_to_light` and `switch_to_dark` built paths from `$(dirname "$0")`,
+  which is `/bin` in an interactive zsh; `switch_theme` used `$BASH_SOURCE`,
+  which zsh does not set. Both palettes are now installed to
+  `~/.config/ghostty/themes/`, so switching no longer depends on the repo being
+  checked out or on the current directory.
+- **`cp -i` broke repeat theme switches.** The `cp` alias is expanded into
+  function bodies at definition time, so switching a second time prompted
+  "overwrite?". The theme functions and `backup()` now use `command cp`.
+
+### Changed
+- **Conda is now opt-in.** `install.sh` skips Miniconda unless given
+  `--with-conda`; it is ~400MB and adds measurable shell startup time.
+
 ### Kept
 - zsh-autosuggestions, zsh-syntax-highlighting and zsh-completions
 - The Powerlevel10k prompt with git branch, dirty state and ahead/behind counts

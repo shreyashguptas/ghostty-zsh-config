@@ -41,6 +41,24 @@ print_header() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
+# Conda is optional. It is ~400MB and adds time to every shell start, so it is
+# off by default. Pass --with-conda to install Miniconda and a py312 env.
+INSTALL_CONDA=false
+for arg in "$@"; do
+    case "$arg" in
+        --with-conda) INSTALL_CONDA=true ;;
+        -h|--help)
+            echo "Usage: $0 [--with-conda]"
+            echo "  --with-conda   Also install Miniconda and create a py312 environment"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $arg (try --help)"
+            exit 1
+            ;;
+    esac
+done
+
 print_header "🚀 Ghostty ZSH Configuration Setup"
 echo "Setting up your enhanced Ghostty terminal..."
 
@@ -82,6 +100,8 @@ brew install --cask font-jetbrains-mono-nerd-font
 
 print_success "All tools installed successfully"
 
+if [ "$INSTALL_CONDA" = true ]; then
+
 print_header "🐍 Setting Up Conda and Python 3.12"
 
 # Check if Conda is already installed (check both command and directory)
@@ -122,6 +142,10 @@ else
 fi
 
 print_success "Conda and Python 3.12 setup complete"
+
+else
+    print_status "Skipping Conda (pass --with-conda to install it)"
+fi
 
 print_header "🔧 Setting Up Oh My Zsh"
 
@@ -172,7 +196,7 @@ print_header "📁 Setting Up Configuration Files"
 
 # Create necessary directories
 print_status "Creating configuration directories..."
-mkdir -p ~/.config/ghostty
+mkdir -p ~/.config/ghostty/themes
 mkdir -p ~/Development
 mkdir -p ~/Projects
 mkdir -p ~/Scripts
@@ -186,13 +210,25 @@ if [ -f ~/.zshrc ]; then
     cp ~/.zshrc ~/.zshrc.backup
 fi
 
-if [ -f ~/.config/ghostty/ghostty.conf ]; then
-    print_status "Backing up existing ghostty.conf to ghostty.conf.backup"
-    cp ~/.config/ghostty/ghostty.conf ~/.config/ghostty/ghostty.conf.backup
+if [ -f ~/.config/ghostty/config ]; then
+    print_status "Backing up existing Ghostty config to config.backup"
+    cp ~/.config/ghostty/config ~/.config/ghostty/config.backup
 fi
 
-# Copy new configuration files
-cp "$REPO_DIR/configs/ghostty.conf" ~/.config/ghostty/
+# Install both palettes so theme switching works without the repo present
+cp "$REPO_DIR/configs/ghostty.conf" ~/.config/ghostty/themes/dark.conf
+cp "$REPO_DIR/configs/ghostty-light.conf" ~/.config/ghostty/themes/light.conf
+
+# Ghostty reads a file literally named "config" — not "ghostty.conf".
+# Pick the palette that matches the current macOS appearance.
+if [ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = "Dark" ]; then
+    cp ~/.config/ghostty/themes/dark.conf ~/.config/ghostty/config
+    print_status "Applied dark palette (matches current macOS appearance)"
+else
+    cp ~/.config/ghostty/themes/light.conf ~/.config/ghostty/config
+    print_status "Applied light palette (matches current macOS appearance)"
+fi
+
 cp "$REPO_DIR/configs/.zshrc" ~/
 cp "$REPO_DIR/configs/.p10k.zsh" ~/
 

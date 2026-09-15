@@ -207,7 +207,33 @@ git fetch
 If the branch shows but the icons are wrong boxes, the Nerd Font is not being
 used — see issue #2 above.
 
-### 10. Slow Terminal Startup
+### 10. Theme Commands Do Nothing
+
+**Problem**: `light`, `dark` or `theme` report success but Ghostty looks unchanged.
+
+**Solutions**:
+```bash
+# Ghostty reads a file literally named "config" — not "ghostty.conf".
+# Confirm the file exists and is the one being written:
+ls -la ~/.config/ghostty/config
+
+# Confirm both palettes are installed:
+ls ~/.config/ghostty/themes/    # should list dark.conf and light.conf
+
+# If themes/ is missing, re-run the installer:
+./scripts/install.sh
+
+# Ghostty only re-reads its config on reload:
+#   press Cmd+Shift+, in Ghostty, or restart it
+
+# Check what Ghostty actually loaded:
+ghostty +show-config | grep -E "background|font-family"
+```
+
+Note that a stray `~/Library/Application Support/com.mitchellh.ghostty/config.ghostty`
+is **not** read by Ghostty either — that path needs a file named `config` too.
+
+### 11. Slow Terminal Startup
 
 **Problem**: Terminal takes a long time to start.
 

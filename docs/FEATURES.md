@@ -95,6 +95,8 @@ Only four plugins are enabled. Every extra plugin costs startup time, so the lis
 
 ## 4. Conda Package Manager
 
+> Optional. `install.sh` skips conda unless you pass `--with-conda`.
+
 ### What is Conda?
 Conda is a powerful package manager and environment management system for Python and other languages. It helps you manage dependencies and create isolated environments for different projects.
 
