@@ -1,101 +1,35 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# Powerlevel10k prompt: directory + git status (branch, dirty state, ahead/behind).
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
 ZSH_CUSTOM="$ZSH/custom"
 
 # Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+# Kept deliberately small — every plugin adds startup time.
+#   git                    - git aliases and completions
+#   zsh-autosuggestions    - the gray inline suggestion from history
+#   zsh-syntax-highlighting - colors commands as you type
+#   zsh-completions        - extra completion definitions for Tab
 plugins=(
     git
-    brew
-    macos
-    docker
-    docker-compose
-    node
-    npm
-    python
-    pip
-    conda
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-completions
-    colored-man-pages
-    command-not-found
-    copyfile
-    copypath
-    dirhistory
-    history
-    sudo
-    web-search
-    extract
-    z
 )
+
+# Autosuggestion strategy: try history first, then fall back to what tab
+# completion would suggest. The `completion` strategy needs the zsh/zpty module
+# (present in a standard zsh); without it, history-only suggestions still work.
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -120,29 +54,6 @@ if [[ -z "$TERM" ]] || [[ "$TERM" == "unknown" ]]; then
     export TERM="xterm-256color"
 fi
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
 # ===== CUSTOM CONFIGURATION =====
 
 # History configuration
@@ -156,23 +67,19 @@ setopt HIST_FIND_NO_DUPS
 setopt SHARE_HISTORY
 setopt INC_APPEND_HISTORY
 
-# Auto-completion
-autoload -U compinit && compinit
+# ===== COMPLETION =====
+# Note: Oh My Zsh already runs compinit, so we don't run it again here.
+# These zstyles just tune how the completion menu looks and behaves.
 
-# Enhanced completion settings
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
-# Case-insensitive completion
+# Case-insensitive and partial-word completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors 'di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-
-# Partial completion
 zstyle ':completion:*' list-suffixes true
 zstyle ':completion:*' expand prefix suffix
 
@@ -186,13 +93,11 @@ alias .....='cd ../../../..'
 alias ~='cd ~'
 alias -- -='cd -'
 
-# List files with colors and details (using eza for better output)
-alias ll='eza -alF --icons'
-alias la='eza -A --icons'
-alias l='eza -CF --icons'
-alias ls='eza --icons'
-alias lt='eza --tree --level=2 --icons'
-alias lta='eza --tree --level=2 --all --icons'
+# List files (built-in ls with colors)
+alias ls='ls -G'
+alias ll='ls -alFG'
+alias la='ls -AG'
+alias l='ls -CFG'
 
 # Git shortcuts
 alias gs='git status'
@@ -208,13 +113,6 @@ alias gcb='git checkout -b'
 alias gst='git stash'
 alias gsp='git stash pop'
 alias glog='git log --oneline --graph --decorate'
-alias lg='lazygit'
-
-# Better alternatives
-alias cat='bat'
-alias find='fd'
-alias grep='rg'
-alias top='htop'
 
 # Directory shortcuts
 alias dev='cd ~/Development'
@@ -280,7 +178,6 @@ alias ccf='conda clean --force-pkgs-dirs'
 
 # Additional conda function aliases
 alias cinfo='conda_info'
-alias cact='conda_activate'
 alias cca='conda_create_activate'
 alias crem='conda_remove_env'
 alias cpkg='conda_packages'
@@ -334,7 +231,7 @@ extract() {
     fi
 }
 
-# Find and kill process
+# Find and kill process on a port
 killport() {
     lsof -ti:$1 | xargs kill -9
 }
@@ -347,52 +244,6 @@ weather() {
 # Quick backup
 backup() {
     cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
-}
-
-# Fuzzy find and open files
-fzf-open() {
-    local file
-    file=$(fzf --preview 'bat --color=always --style=header,grid --line-range :300 {}')
-    [ -n "$file" ] && ${EDITOR:-code} "$file"
-}
-
-# Fuzzy find and cd into directories
-fzf-cd() {
-    local dir
-    dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
-    cd "$dir"
-}
-
-# Fuzzy find in git history
-fzf-git-log() {
-    git log --oneline --graph --decorate | fzf --preview 'git show --color=always {1}' | cut -d' ' -f1 | xargs git show
-}
-
-# System info
-sysinfo() {
-    echo "=== System Information ==="
-    neofetch
-    echo ""
-    echo "=== Memory Usage ==="
-    htop --version
-    echo ""
-    echo "=== Disk Usage ==="
-    df -h
-}
-
-# Quick file search
-search() {
-    if [ -z "$1" ]; then
-        echo "Usage: search <pattern>"
-        return 1
-    fi
-    rg --color=always --line-number --no-heading --smart-case "$1" | fzf --ansi
-}
-
-# Quick directory navigation
-nav() {
-    local dir
-    dir=$(find . -type d -not -path '*/\.*' | fzf) && cd "$dir"
 }
 
 # ===== THEME MANAGEMENT FUNCTIONS =====
@@ -412,17 +263,17 @@ is_dark_mode() {
 switch_terminal_theme() {
     local config_dir="$(dirname "$0")/configs"
     local ghostty_config_dir="$HOME/.config/ghostty"
-    
+
     # Create ghostty config directory if it doesn't exist
     mkdir -p "$ghostty_config_dir"
-    
+
     if is_dark_mode; then
         # Dark mode colors
         echo "🌙 Switching to dark mode colors..."
         cp "$config_dir/ghostty.conf" "$ghostty_config_dir/ghostty.conf"
         echo "✅ Dark mode configuration applied!"
     else
-        # Light mode colors  
+        # Light mode colors
         echo "☀️ Switching to light mode colors..."
         cp "$config_dir/ghostty-light.conf" "$ghostty_config_dir/ghostty.conf"
         echo "✅ Light mode configuration applied!"
@@ -435,7 +286,7 @@ switch_theme() {
     local theme="${1:-auto}"
     local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     local switch_script="$script_dir/../scripts/switch-theme.sh"
-    
+
     if [[ -f "$switch_script" ]]; then
         bash "$switch_script" "$theme"
     else
@@ -512,13 +363,6 @@ conda_info() {
     conda env list
 }
 
-# Quick conda environment activation with fzf
-conda_activate() {
-    local env
-    env=$(conda env list | grep -v '^#' | awk '{print $1}' | fzf --height=40% --reverse)
-    [ -n "$env" ] && conda activate "$env"
-}
-
 # Create and activate a new conda environment
 conda_create_activate() {
     if [ -z "$1" ]; then
@@ -564,40 +408,9 @@ export EDITOR='code'
 export VISUAL='code'
 export BROWSER='open'
 
-# ===== CONDA INITIALIZATION =====
-# Initialize conda for zsh
-if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-    . "$HOME/miniconda3/etc/profile.d/conda.sh"
-else
-    export PATH="$HOME/miniconda3/bin:$PATH"
-fi
-
-# Add conda to PATH (keeping your existing conda setup)
 export PATH="$HOME/.local/bin:$PATH"
 
-# ===== FZF CONFIGURATION =====
-# Use fd instead of find for fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-
-# FZF key bindings
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# ===== KEYBOARD SHORTCUTS =====
-# Bind Ctrl+R to fzf history search
-bindkey '^R' fzf-history-widget
-
-# Bind Ctrl+T to fzf file search
-bindkey '^T' fzf-file-widget
-
-# Bind Alt+C to fzf directory search
-bindkey '\ec' fzf-cd-widget
-
 # ===== AUTOCOMPLETE AND AUTOSUGGESTION KEY BINDINGS =====
-# Enhanced Tab completion - Tab will complete what you're typing
-bindkey '^I' complete-word
-
 # Accept autosuggestion with Right Arrow (character by character)
 bindkey '^[[C' forward-char
 
@@ -610,27 +423,23 @@ bindkey '^[[1;5C' forward-word
 # Accept autosuggestion with Ctrl+End (accept entire suggestion)
 bindkey '^[[1;5F' end-of-line
 
-# Better completion behavior
+# Tab completes the longest unambiguous prefix, then shows the menu
 bindkey '^I' expand-or-complete-prefix
 
 # ===== POWERLEVEL10K CONFIGURATION =====
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/shreyashgupta/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/shreyashgupta/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/shreyashgupta/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/shreyashgupta/miniconda3/bin:$PATH"
-    fi
+# ===== CONDA INITIALIZATION =====
+# Sourcing conda.sh directly is much faster than `conda shell.zsh hook`,
+# which spawns a Python process on every shell start.
+if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/miniconda3/etc/profile.d/conda.sh"
+elif [ -d "$HOME/miniconda3/bin" ]; then
+    export PATH="$HOME/miniconda3/bin:$PATH"
 fi
-unset __conda_setup
-# <<< conda initialize <<<
 
-# Auto-activate Python 3.12 environment
-conda activate py312
+# Auto-activate Python 3.12 environment (only if it exists)
+if command -v conda &> /dev/null && [ -d "$HOME/miniconda3/envs/py312" ]; then
+    conda activate py312
+fi

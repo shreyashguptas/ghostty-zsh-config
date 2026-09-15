@@ -37,24 +37,28 @@ brew install --cask font-jetbrains-mono-nerd-font
 # In Ghostty preferences, set font to "JetBrains Mono Nerd Font"
 ```
 
-### 3. FZF Not Working
+### 3. Autosuggestions Not Appearing
 
-**Problem**: Fuzzy finder (fzf) is not working or not installed.
+**Problem**: No gray suggestion appears as you type.
 
 **Solutions**:
 ```bash
-# Check if fzf is installed
-which fzf
+# Check the plugin is installed
+ls ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# If not installed
-brew install fzf
+# If missing, install it
+git clone https://github.com/zsh-users/zsh-autosuggestions \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# Set up fzf
-$(brew --prefix)/opt/fzf/install --all
+# Confirm it is in the plugins list in ~/.zshrc
+grep -A6 '^plugins=' ~/.zshrc
 
 # Reload configuration
 source ~/.zshrc
 ```
+
+Suggestions come from your command history, so a brand-new history has nothing
+to suggest yet. Run a few commands and try again.
 
 ### 4. Oh My Zsh Plugins Not Loading
 
@@ -176,79 +180,76 @@ source ~/.zshrc
 grep "alias ll" ~/.zshrc
 ```
 
-### 9. Git Delta Not Working
+### 9. Prompt Not Showing Git Status or Ahead/Behind Counts
 
-**Problem**: Git diffs are not showing with delta highlighting.
-
-**Solutions**:
-```bash
-# Check git configuration
-git config --global core.pager
-
-# Should show: delta
-
-# If not, configure delta
-git config --global core.pager delta
-git config --global interactive.diffFilter 'delta --color-only'
-git config --global delta.navigate true
-git config --global delta.side-by-side true
-git config --global delta.syntax-theme "Monokai Extended"
-```
-
-### 10. Tools Not Found (bat, eza, fd, etc.)
-
-**Problem**: Commands like `bat`, `eza`, `fd` are not found.
+**Problem**: You're inside a repository but the prompt shows no branch, or no `⇡`/`⇣` counts.
 
 **Solutions**:
 ```bash
-# Check if tools are installed
-which bat
-which eza
-which fd
+# Confirm you are actually in a repository
+git rev-parse --is-inside-work-tree
 
-# If not installed
-brew install bat eza fd ripgrep tree htop lazygit delta
+# Ahead/behind counts need an upstream branch to compare against
+git rev-parse --abbrev-ref @{upstream}
 
-# Check PATH
-echo $PATH
+# If that errors, set one:
+git branch --set-upstream-to=origin/main
 
-# Should include Homebrew paths
-# For Apple Silicon: /opt/homebrew/bin
-# For Intel: /usr/local/bin
+# install.sh sets push.autoSetupRemote so this happens on first push.
+# Check it is on:
+git config --global --get push.autoSetupRemote
+
+# The counts only update against what git already knows locally.
+# Fetch to refresh them:
+git fetch
 ```
 
-### 11. Slow Terminal Startup
+If the branch shows but the icons are wrong boxes, the Nerd Font is not being
+used — see issue #2 above.
+
+### 10. Slow Terminal Startup
 
 **Problem**: Terminal takes a long time to start.
 
 **Solutions**:
 ```bash
-# Check what's loading slowly
+# Measure it
 time zsh -i -c exit
 
-# Check .zshrc for slow operations
-# Look for network calls or heavy operations
+# Check the plugin list is still short — every plugin costs startup time.
+# This config intentionally loads only four:
+grep -A6 '^plugins=' ~/.zshrc
 
-# Disable some plugins temporarily to identify the issue
-# Comment out plugins in ~/.zshrc and test
+# Confirm the instant prompt block is still the FIRST thing in ~/.zshrc
+head -6 ~/.zshrc
+
+# Conda is often the slowest part. This config sources conda.sh directly
+# instead of running `conda shell.zsh hook`, which spawns a Python process.
+# If `conda init zsh` re-added that block, remove it:
+grep -n "conda initialize" ~/.zshrc
+
+# To profile in detail, add `zmodload zsh/zprof` at the top of ~/.zshrc
+# and `zprof` at the bottom, then open a new shell.
 ```
 
 ## 🔍 Diagnostic Commands
 
 ### Check Installation Status
 ```bash
-# Check if all tools are installed
+# Check if everything is installed
 echo "=== Checking Tools ==="
 which ghostty && echo "✅ Ghostty" || echo "❌ Ghostty"
 which brew && echo "✅ Homebrew" || echo "❌ Homebrew"
-which fzf && echo "✅ fzf" || echo "❌ fzf"
-which bat && echo "✅ bat" || echo "❌ bat"
-which eza && echo "✅ eza" || echo "❌ eza"
-which fd && echo "✅ fd" || echo "❌ fd"
-which rg && echo "✅ ripgrep" || echo "❌ ripgrep"
-which lazygit && echo "✅ lazygit" || echo "❌ lazygit"
-which delta && echo "✅ delta" || echo "❌ delta"
-which htop && echo "✅ htop" || echo "❌ htop"
+which git && echo "✅ git" || echo "❌ git"
+which conda && echo "✅ conda" || echo "❌ conda"
+
+echo "=== Checking Plugins ==="
+for p in zsh-autosuggestions zsh-syntax-highlighting zsh-completions; do
+  [ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$p" ] \
+    && echo "✅ $p" || echo "❌ $p"
+done
+[ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ] \
+  && echo "✅ powerlevel10k" || echo "❌ powerlevel10k"
 
 echo "=== Checking Configuration ==="
 ls -la ~/.zshrc && echo "✅ .zshrc exists" || echo "❌ .zshrc missing"
@@ -272,11 +273,10 @@ zsh --version
 cat ~/.oh-my-zsh/oh-my-zsh.sh | head -1
 ```
 
-### Check Git Configuration
+### Check Startup Time
 ```bash
-# Check git configuration
-git config --global --list | grep delta
-git config --global core.pager
+# A healthy startup with this config is well under half a second
+time zsh -i -c exit
 ```
 
 ## 🚨 Emergency Reset
@@ -313,9 +313,6 @@ zsh -n ~/.zshrc
 
 ### Test Individual Components
 ```bash
-# Test fzf
-fzf --version
-
 # Test Oh My Zsh
 echo $ZSH
 
@@ -323,21 +320,13 @@ echo $ZSH
 echo $POWERLEVEL9K_VERSION
 
 # Test aliases
-alias | grep -E "(ll|lg|bat|eza)"
+alias | grep -E "^(ll|la|gs|gd)="
+
+# Test autosuggestions is loaded
+echo $ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
 ```
 
 ### Common Error Messages
-
-#### "command not found: fzf"
-```bash
-brew install fzf
-$(brew --prefix)/opt/fzf/install --all
-```
-
-#### "zsh: command not found: bat"
-```bash
-brew install bat
-```
 
 #### "No such file or directory: .oh-my-zsh"
 ```bash
@@ -346,8 +335,15 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 
 #### "fatal: not a git repository"
 ```bash
-# This is normal if you're not in a git repository
-# Use 'lg' command to initialize git in a directory
+# This is normal if you're not in a git repository.
+# The prompt simply omits the git segment outside of repositories.
+```
+
+#### "command not found: eza" / "bat" / "fzf" / "lazygit"
+```bash
+# Expected. This config deliberately does not install those tools,
+# and does not alias ls/cat/find/grep/top to them.
+# Use the standard commands instead: ls, cat, find, grep, top.
 ```
 
 ## 🎯 Quick Fixes

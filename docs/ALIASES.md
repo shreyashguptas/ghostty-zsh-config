@@ -17,21 +17,12 @@ This document provides a comprehensive reference for all aliases and functions a
 
 | Alias | Command | Description |
 |-------|---------|-------------|
-| `ll` | `eza -alF --icons` | Detailed file listing with icons |
-| `la` | `eza -A --icons` | List all files with icons |
-| `l` | `eza -CF --icons` | List files with icons |
-| `ls` | `eza --icons` | List files with icons (replaces ls) |
-| `lt` | `eza --tree --level=2 --icons` | Tree view of current directory |
-| `lta` | `eza --tree --level=2 --all --icons` | Tree view including hidden files |
+| `ls` | `ls -G` | List files with color |
+| `ll` | `ls -alFG` | Detailed listing, including hidden files |
+| `la` | `ls -AG` | List all files except `.` and `..` |
+| `l` | `ls -CFG` | Compact column listing |
 
-## 🔍 Search and View Aliases
-
-| Alias | Command | Description |
-|-------|---------|-------------|
-| `cat` | `bat` | Syntax-highlighted file viewing |
-| `find` | `fd` | Fast file search |
-| `grep` | `rg` | Lightning-fast text search |
-| `top` | `htop` | Enhanced process viewer |
+> `ls`, `cat`, `find`, `grep` and `top` are the real system commands — this setup does not shadow them with replacements.
 
 ## 🔧 Git Aliases
 
@@ -50,7 +41,6 @@ This document provides a comprehensive reference for all aliases and functions a
 | `gst` | `git stash` | Stash changes |
 | `gsp` | `git stash pop` | Apply stash |
 | `glog` | `git log --oneline --graph --decorate` | Beautiful git log |
-| `lg` | `lazygit` | Beautiful git interface |
 
 ## 📂 Directory Shortcuts
 
@@ -143,7 +133,6 @@ This document provides a comprehensive reference for all aliases and functions a
 | Function | Description | Usage |
 |----------|-------------|-------|
 | `conda_info` | Show detailed conda environment information | `cinfo` |
-| `conda_activate` | Interactive conda environment selection with fzf | `cact` |
 | `conda_create_activate` | Create and activate new conda environment | `cca <env_name> [python_version]` |
 | `conda_remove_env` | Remove conda environment safely | `crem <env_name>` |
 | `conda_packages` | List packages in conda environment | `cpkg [env_name]` |
@@ -196,35 +185,6 @@ backup ~/.zshrc
 # Creates ~/.zshrc.backup.20241206_143022
 ```
 
-#### `fzf-open`
-Fuzzy find and open files.
-```bash
-fzf-open
-# Opens fuzzy finder to select and open files
-```
-
-#### `fzf-cd`
-Fuzzy find and cd into directories.
-```bash
-fzf-cd
-# Opens fuzzy finder to select and navigate to directories
-```
-
-#### `search <pattern>`
-Search files with ripgrep + fzf.
-```bash
-search "function"
-search "import"
-# Searches for pattern in files with preview
-```
-
-#### `nav`
-Quick directory navigation.
-```bash
-nav
-# Opens fuzzy finder for directory navigation
-```
-
 ### System Utilities
 
 #### `killport <port>`
@@ -233,13 +193,6 @@ Kill process using specific port.
 killport 3000
 killport 8080
 # Kills process running on specified port
-```
-
-#### `sysinfo`
-Display system information.
-```bash
-sysinfo
-# Shows system information, memory usage, and disk usage
 ```
 
 #### `weather <city>`
@@ -251,19 +204,17 @@ weather Tokyo
 # Shows weather information for specified city
 ```
 
-#### `fzf-git-log`
-Fuzzy find in git history.
-```bash
-fzf-git-log
-# Opens fuzzy finder to search git history
-```
-
 ## ⌨️ Keyboard Shortcuts
 
-### FZF Integration
-- **Ctrl+T**: Search and insert files
-- **Ctrl+R**: Search command history
-- **Alt+C**: Search and cd into directories
+### Autosuggestions and Completion
+- **→ (Right Arrow)**: Accept the suggestion one character at a time
+- **End**: Accept the entire suggestion
+- **Ctrl+→**: Accept the suggestion one word at a time
+- **Ctrl+End**: Accept the entire suggestion
+- **Tab**: Complete the longest unambiguous prefix, then show the menu
+- **Ctrl+R**: Search command history (zsh built-in reverse search)
+
+Run `ac-help` at any time to print this list in your terminal.
 
 ### Terminal Shortcuts
 - **Ctrl+L**: Clear screen
@@ -278,39 +229,35 @@ fzf-git-log
 # Navigate quickly
 ..                      # Go up one level
 dev                     # Go to Development folder
-nav                     # Fuzzy navigate
 
 # Work with files
-ll                      # See files with icons
-fzf-open                # Find and open files
-search "TODO"           # Find TODO comments
+ll                      # See files, including hidden ones
+grep -rn "TODO" .       # Find TODO comments
 
 # Git workflow
 gs                      # Check status
 ga .                    # Stage all changes
 gc -m "Add feature"     # Commit changes
-lg                      # Use beautiful git interface
+glog                    # See the history as a graph
 
-# System monitoring
-sysinfo                 # Check system status
-htop                    # Monitor processes
+# Misc
 weather London          # Check weather
+top                     # Monitor processes
 ```
 
 ### Development Workflow
 ```bash
 # Create new project
 mkcd myproject          # Create and enter project directory
-lg                      # Initialize git repository
+git init                # Initialize git repository
 
 # Work with code
-search "function"       # Find functions
-fzf-open                # Open files quickly
-cat main.py             # View with syntax highlighting
+grep -rn "function" .   # Find functions
+cat main.py             # View a file
 
 # Manage processes
 killport 3000           # Kill development server
-htop                    # Monitor system resources
+top                     # Monitor system resources
 ```
 
 ### Python and Conda Workflow
@@ -340,11 +287,11 @@ cda                    # Deactivate current environment
 
 ## 💡 Pro Tips
 
-1. **Use fuzzy finders**: `fzf-open`, `nav`, `Ctrl+T` are much faster than traditional navigation
-2. **Git workflow**: Use `lg` for complex git operations, aliases for simple ones
-3. **File operations**: Use `ll` instead of `ls` for better information
-4. **Search**: Use `search` instead of `grep` for interactive searching
-5. **System info**: Use `sysinfo` for quick system overview
+1. **Autosuggestions**: Start typing a command you've run before, then press `→` to accept the gray suggestion
+2. **Prompt**: The prompt shows your branch, whether the tree is dirty, and how many commits you are ahead/behind the remote
+3. **Git workflow**: The short aliases (`gs`, `ga`, `gc`, `gp`) cover most day-to-day git use
+4. **File operations**: Use `ll` instead of `ls` for more information
+5. **History**: `Ctrl+R` searches your command history
 6. **Weather**: Use `weather` for quick weather checks
 7. **Backup**: Use `backup` before making important changes
 8. **Conda environments**: Use `ce` to see all environments, `ca` to activate

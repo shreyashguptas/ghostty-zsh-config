@@ -70,17 +70,16 @@ chmod +x scripts/install.sh
 - **ALIASES.md**: Complete reference for all aliases and functions
 - **TROUBLESHOOTING.md**: Common issues and solutions
 
-### ✅ **Tools Included**
-- fzf (fuzzy finder)
-- bat (syntax highlighting)
-- eza (modern file listing)
-- fd (fast file search)
-- ripgrep (fast text search)
-- lazygit (git interface)
-- delta (git diffs)
-- htop (process viewer)
-- Oh My Zsh + Powerlevel10k
-- JetBrains Mono Nerd Font
+### ✅ **What Gets Installed**
+- Oh My Zsh + Powerlevel10k (fast, git-aware prompt)
+- zsh-autosuggestions (inline suggestions from history)
+- zsh-syntax-highlighting
+- zsh-completions
+- JetBrains Mono Nerd Font (for the prompt glyphs)
+- Miniconda with a Python 3.12 environment
+
+No command-line tools are installed and no standard commands are shadowed —
+`ls`, `cat`, `find`, `grep` and `top` stay as they are.
 
 ## 🎯 Next Steps
 

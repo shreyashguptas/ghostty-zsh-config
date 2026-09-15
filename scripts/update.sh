@@ -68,10 +68,6 @@ if [ -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
     print_success "Powerlevel10k updated"
 fi
 
-# Update fzf
-print_status "Updating fzf..."
-$(brew --prefix)/opt/fzf/install --all
-
 print_success "All tools and configurations updated successfully!"
 
 echo ""

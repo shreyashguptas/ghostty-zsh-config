@@ -1,27 +1,21 @@
 # 🚀 Ghostty Terminal Enhancements - Complete Guide
 
 ## Overview
-This document explains all the enhancements made to your Ghostty terminal, including new tools, features, and how to use them effectively.
+This document explains the enhancements made to your Ghostty terminal and how to use them.
+
+This setup is deliberately minimal. It does not install fzf, eza, bat, fd, ripgrep, lazygit, delta or htop, and it does not alias `ls`, `cat`, `find`, `grep` or `top` to anything else — those stay as the real system commands. What you get is a fast shell, a git-aware prompt, and inline autosuggestions.
 
 ---
 
 ## 📋 Table of Contents
 1. [Multi-line Paste Fix](#1-multi-line-paste-fix)
-2. [EZA - Modern File Listing](#2-eza---modern-file-listing)
-3. [BAT - Syntax-Highlighted File Viewing](#3-bat---syntax-highlighted-file-viewing)
-4. [FZF - Fuzzy Finder](#4-fzf---fuzzy-finder)
-5. [FD - Fast File Search](#5-fd---fast-file-search)
-6. [RIPGREP - Fast Text Search](#6-ripgrep---fast-text-search)
-7. [LAZYGIT - Beautiful Git Interface](#7-lazygit---beautiful-git-interface)
-8. [DELTA - Better Git Diffs](#8-delta---better-git-diffs)
-9. [HTOP - Enhanced Process Viewer](#9-htop---enhanced-process-viewer)
-10. [Powerlevel10k - Beautiful Prompt](#10-powerlevel10k---beautiful-prompt)
-11. [Oh My Zsh Plugins](#11-oh-my-zsh-plugins)
-12. [Conda Package Manager](#12-conda-package-manager)
-13. [Theme Management](#13-theme-management)
-14. [Useful Aliases](#14-useful-aliases)
-15. [Custom Functions](#15-custom-functions)
-16. [Keyboard Shortcuts](#16-keyboard-shortcuts)
+2. [Powerlevel10k - The Prompt](#2-powerlevel10k---the-prompt)
+3. [Oh My Zsh Plugins](#3-oh-my-zsh-plugins)
+4. [Conda Package Manager](#4-conda-package-manager)
+5. [Theme Management](#5-theme-management)
+6. [Useful Aliases](#6-useful-aliases)
+7. [Custom Functions](#7-custom-functions)
+8. [Keyboard Shortcuts](#8-keyboard-shortcuts)
 
 ---
 
@@ -45,316 +39,26 @@ paste-multiline-delay 0.1
 
 ---
 
-## 2. EZA - Modern File Listing
-
-### What is EZA?
-EZA is a modern replacement for the `ls` command with better colors, icons, and formatting.
-
-### Features
-- **Icons**: Shows file type icons
-- **Colors**: Better color coding
-- **Tree view**: Directory structure visualization
-- **Git integration**: Shows git status in file listings
-
-### Commands Available
-```bash
-# Basic listing (now aliased to 'ls')
-eza --icons
-
-# Detailed listing (now aliased to 'll')
-eza -alF --icons
-
-# Tree view (now aliased to 'lt')
-eza --tree --level=2 --icons
-
-# Tree view with hidden files (now aliased to 'lta')
-eza --tree --level=2 --all --icons
-```
-
-### How to Test
-```bash
-# Try these commands in your terminal:
-ls          # Now uses eza with icons
-ll          # Detailed listing with icons
-lt          # Tree view of current directory
-lta         # Tree view including hidden files
-```
-
----
-
-## 3. BAT - Syntax-Highlighted File Viewing
-
-### What is BAT?
-BAT is a modern replacement for the `cat` command with syntax highlighting and line numbers.
-
-### Features
-- **Syntax highlighting**: Colors code based on file type
-- **Line numbers**: Shows line numbers
-- **Git integration**: Highlights git changes
-- **Paging**: Built-in paging support
-
-### Commands Available
-```bash
-# Basic file viewing (now aliased to 'cat')
-bat filename
-
-# With line numbers
-bat -n filename
-
-# With git integration
-bat --git filename
-
-# Show all features
-bat --style=full filename
-```
-
-### How to Test
-```bash
-# Try these commands:
-cat ~/.zshrc          # Now uses bat with syntax highlighting
-bat ~/.zshrc          # Same result, more explicit
-bat --style=full ~/.zshrc  # Show all features
-```
-
----
-
-## 4. FZF - Fuzzy Finder
-
-### What is FZF?
-FZF is a fuzzy finder that helps you quickly find files, directories, and commands.
-
-### Features
-- **Fuzzy search**: Type partial matches to find files
-- **Preview**: See file contents while searching
-- **Multiple modes**: File search, directory search, history search
-- **Keyboard shortcuts**: Integrated with terminal
-
-### Commands Available
-```bash
-# File search
-fzf
-
-# Directory search
-fzf --type=d
-
-# History search
-fzf --history
-
-# Custom functions
-fzf-open    # Find and open files
-fzf-cd      # Find and cd into directories
-nav         # Quick directory navigation
-```
-
-### Keyboard Shortcuts
-- **Ctrl+T**: Search and insert files
-- **Ctrl+R**: Search command history
-- **Alt+C**: Search and cd into directories
-
-### How to Test
-```bash
-# Try these:
-fzf                    # Search for files
-Ctrl+T                 # Search and insert files
-Ctrl+R                 # Search command history
-fzf-open               # Find and open a file
-nav                    # Navigate to a directory
-```
-
----
-
-## 5. FD - Fast File Search
-
-### What is FD?
-FD is a fast, user-friendly alternative to the `find` command.
-
-### Features
-- **Speed**: Much faster than traditional `find`
-- **Smart defaults**: Ignores .git, .node_modules, etc.
-- **Regex support**: Pattern matching
-- **Type filtering**: Search by file type
-
-### Commands Available
-```bash
-# Basic search (now aliased to 'find')
-fd pattern
-
-# Search by extension
-fd -e txt
-
-# Search by type
-fd -t f    # files only
-fd -t d    # directories only
-
-# Case insensitive
-fd -i pattern
-
-# Include hidden files
-fd -H pattern
-```
-
-### How to Test
-```bash
-# Try these commands:
-find "*.md"            # Now uses fd - much faster!
-fd "*.md"              # Same result, more explicit
-fd -e py               # Find all Python files
-fd -t d                # Find all directories
-```
-
----
-
-## 6. RIPGREP - Fast Text Search
-
-### What is RIPGREP?
-RIPGREP is an extremely fast text search tool, much faster than `grep`.
-
-### Features
-- **Speed**: Lightning fast text search
-- **Smart defaults**: Ignores binary files and .git
-- **Regex support**: Full regex pattern matching
-- **Context**: Show lines before/after matches
-
-### Commands Available
-```bash
-# Basic search (now aliased to 'grep')
-rg pattern
-
-# Search in specific file types
-rg -t py pattern
-
-# Case insensitive
-rg -i pattern
-
-# Show context lines
-rg -C 3 pattern
-
-# Search and replace
-rg -l pattern | xargs sed -i 's/old/new/g'
-```
-
-### How to Test
-```bash
-# Try these commands:
-grep "function" ~/.zshrc    # Now uses ripgrep - much faster!
-rg "function" ~/.zshrc      # Same result, more explicit
-rg -i "git" ~/.zshrc        # Case insensitive search
-rg -C 2 "alias" ~/.zshrc    # Show 2 lines of context
-```
-
----
-
-## 7. LAZYGIT - Beautiful Git Interface
-
-### What is LAZYGIT?
-LAZYGIT is a simple, fast, and beautiful terminal UI for git.
-
-### Features
-- **Visual interface**: See all git operations in a beautiful UI
-- **Staging**: Easy file staging and unstaging
-- **Commits**: Visual commit creation
-- **Branches**: Easy branch management
-- **Logs**: Beautiful git log visualization
-
-### Commands Available
-```bash
-# Open lazygit (now aliased to 'lg')
-lazygit
-
-# In lazygit interface:
-# - j/k: Navigate up/down
-# - Enter: Select/expand
-# - Space: Stage/unstage files
-# - c: Commit
-# - p: Push
-# - P: Pull
-# - b: Create branch
-# - d: Delete branch
-# - q: Quit
-```
-
-### How to Test
-```bash
-# Try this:
-lg                      # Opens beautiful git interface
-# Navigate with j/k, stage files with space, commit with c
-```
-
----
-
-## 8. DELTA - Better Git Diffs
-
-### What is DELTA?
-DELTA is a syntax-highlighting pager for git, diff, and grep output.
-
-### Features
-- **Syntax highlighting**: Colors in diff output
-- **Side-by-side**: Compare changes side by side
-- **Git integration**: Automatically used with git
-- **Custom themes**: Beautiful color schemes
-
-### Configuration Added
-```bash
-# Git configuration for delta
-git config --global core.pager delta
-git config --global interactive.diffFilter 'delta --color-only'
-git config --global delta.navigate true
-git config --global delta.side-by-side true
-git config --global delta.syntax-theme "Monokai Extended"
-```
-
-### How to Test
-```bash
-# Try these commands:
-git diff                # Now uses delta with beautiful highlighting
-git log --oneline       # See commit history
-git show HEAD           # See last commit with delta highlighting
-```
-
----
-
-## 9. HTOP - Enhanced Process Viewer
-
-### What is HTOP?
-HTOP is an interactive process viewer, much better than the default `top` command.
-
-### Features
-- **Interactive**: Click to select processes
-- **Tree view**: See process hierarchy
-- **Kill processes**: F9 to kill selected process
-- **Search**: F3 to search processes
-- **Sorting**: F6 to sort by different columns
-
-### Commands Available
-```bash
-# Basic usage (now aliased to 'top')
-htop
-
-# With root privileges for all processes
-sudo htop
-```
-
-### How to Test
-```bash
-# Try these:
-top                     # Now uses htop - much better interface!
-htop                    # Same result, more explicit
-sudo htop               # See all system processes
-```
-
----
-
-## 10. Powerlevel10k - Beautiful Prompt
+## 2. Powerlevel10k - The Prompt
 
 ### What is Powerlevel10k?
-Powerlevel10k is a fast, customizable zsh prompt with many features.
+Powerlevel10k is a fast zsh prompt. It is the main thing this config is built around.
 
-### Features
-- **Git integration**: Shows git status, branch, changes
-- **System info**: Shows Python/Node versions, time, etc.
-- **Customizable**: Run `p10k configure` to customize
-- **Fast**: Optimized for speed
-- **Icons**: Beautiful icons for different states
+### What the prompt shows
+- **Current directory** on the left
+- **Git status** whenever you are inside a repository:
+  - the branch name
+  - a marker when the working tree is dirty or has untracked files
+  - **⇡N / ⇣N** — how many commits you are **ahead of / behind** the remote
+  - stash count, merge/rebase state
+- **Exit code** of the last command, if it failed
+- **Command duration**, for anything slow
+- **Active conda environment** (or virtualenv / node / go / rust version, when relevant)
+
+### Why it is fast
+- **Instant prompt**: `~/.zshrc` starts with the Powerlevel10k instant-prompt block, so the prompt draws immediately instead of waiting for the rest of the config to load.
+- **Async git status**: git information is computed in the background — large repos never block your prompt.
+- **Small plugin list**: only four Oh My Zsh plugins are loaded.
 
 ### Configuration
 - **File**: `~/.p10k.zsh`
@@ -362,40 +66,34 @@ Powerlevel10k is a fast, customizable zsh prompt with many features.
 
 ### How to Test
 ```bash
-# Try these:
-p10k configure          # Customize your prompt
-# Navigate to a git repository to see git status
-# Check different directories to see system info
+cd ~/some-git-repo      # prompt shows the branch
+touch newfile           # prompt now shows the dirty/untracked marker
+git fetch               # prompt shows ⇡/⇣ if you are ahead of or behind the remote
+p10k configure          # customize your prompt
 ```
 
 ---
 
-## 11. Oh My Zsh Plugins
+## 3. Oh My Zsh Plugins
 
-### Installed Plugins
-- **zsh-autosuggestions**: Suggests commands as you type
-- **zsh-syntax-highlighting**: Colors commands as you type
-- **zsh-completions**: Enhanced tab completion
-- **git**: Git aliases and functions
-- **brew, macos, docker**: Platform-specific tools
-- **colored-man-pages**: Colored manual pages
-- **command-not-found**: Helpful suggestions for typos
-- **extract**: Universal archive extractor
-- **z**: Smart directory jumping
+Only four plugins are enabled. Every extra plugin costs startup time, so the list is kept short on purpose.
+
+- **zsh-autosuggestions**: The gray inline suggestion drawn from your history as you type. Press `→` to accept it. The strategy is set to `(history completion)`, so when history has no match it falls back to what tab completion would suggest.
+- **zsh-syntax-highlighting**: Colors your command line as you type — valid commands go green, unknown ones red.
+- **zsh-completions**: Extra completion definitions, so Tab knows about more commands.
+- **git**: Git aliases and completions.
 
 ### How to Test
 ```bash
-# Try these:
-# Type a command and see suggestions appear
-# Type a command and see syntax highlighting
-# Use tab completion - it's much better now
-# Type 'extract filename.zip' to extract archives
-# Type 'z' to see frequently used directories
+# Type the start of a command you have run before — a gray suggestion appears.
+# Press → to accept it, or End to accept the whole thing.
+# Type a bogus command like 'gti' — it stays red until it is a real command.
+# Type 'git ' and press Tab to see git subcommands.
 ```
 
 ---
 
-## 12. Conda Package Manager
+## 4. Conda Package Manager
 
 ### What is Conda?
 Conda is a powerful package manager and environment management system for Python and other languages. It helps you manage dependencies and create isolated environments for different projects.
@@ -518,7 +216,7 @@ ca data-analysis      # Switch to data analysis
 
 ---
 
-## 13. Theme Management
+## 5. Theme Management
 
 ### What is Theme Management?
 This setup includes dynamic theme switching that automatically adapts to your macOS system theme, providing optimal readability in both light and dark modes.
@@ -611,7 +309,7 @@ theme          # Auto-detect and switch
 
 ---
 
-## 14. Useful Aliases
+## 6. Useful Aliases
 
 ### Navigation Aliases
 ```bash
@@ -624,12 +322,10 @@ theme          # Auto-detect and switch
 
 ### File Operation Aliases
 ```bash
-ll                      # Detailed file listing with eza
-la                      # List all files with eza
-l                       # List files with eza
-ls                      # List files with eza and icons
-lt                      # Tree view with eza
-lta                     # Tree view including hidden files
+ls                      # ls -G   (colored listing)
+ll                      # ls -alFG (detailed, includes hidden files)
+la                      # ls -AG  (all except . and ..)
+l                       # ls -CFG (compact columns)
 ```
 
 ### Git Aliases
@@ -647,14 +343,12 @@ gcb                     # git checkout -b
 gst                     # git stash
 gsp                     # git stash pop
 glog                    # git log --oneline --graph --decorate
-lg                      # lazygit
 ```
 
 ### System Aliases
 ```bash
 c                       # clear
 h                       # history
-sysinfo                 # system information
 weather <city>          # weather information
 myip                    # public IP address
 localip                 # local IP address
@@ -666,93 +360,89 @@ localip                 # local IP address
 ..                      # Go up one directory
 ll                      # See detailed file listing
 gs                      # Check git status
-sysinfo                 # See system information
 weather London          # Get weather for London
 ```
 
 ---
 
-## 14. Custom Functions
+## 7. Custom Functions
 
 ### File Operations
 ```bash
-fzf-open                # Fuzzy find and open files
-fzf-cd                  # Fuzzy find and cd into directories
-search <pattern>        # Search files with ripgrep + fzf
-nav                     # Quick directory navigation
 extract <file>          # Extract any archive format
 backup <file>           # Create timestamped backup
+mkcd <dir>              # Create directory and cd into it
 ```
 
 ### System Utilities
 ```bash
 killport <port>         # Kill process using specific port
-sysinfo                 # Display system information
 weather <city>          # Get weather for city
-mkcd <dir>              # Create directory and cd into it
+ac-help                 # Print the autosuggestion/completion cheatsheet
 ```
 
 ### How to Test
 ```bash
-# Try these functions:
-fzf-open                # Find and open a file
-search "function"       # Search for "function" in files
-nav                     # Navigate to a directory
 extract ~/Downloads/somefile.zip  # Extract an archive
 backup ~/.zshrc         # Create a backup of .zshrc
 killport 3000           # Kill process on port 3000
 weather New York        # Get weather for New York
 mkcd newproject         # Create and enter newproject directory
+ac-help                 # See the keyboard shortcuts
 ```
 
 ---
 
-## 15. Keyboard Shortcuts
+## 8. Keyboard Shortcuts
 
-### FZF Shortcuts
-- **Ctrl+T**: Search and insert files
-- **Ctrl+R**: Search command history
-- **Alt+C**: Search and cd into directories
+### Autosuggestions
+- **→ (Right Arrow)**: Accept the suggestion one character at a time
+- **End**: Accept the entire suggestion
+- **Ctrl+→**: Accept the suggestion one word at a time
+- **Ctrl+End**: Accept the entire suggestion
+
+### Completion
+- **Tab**: Complete the longest unambiguous prefix, then show the menu
+- **Tab Tab**: Cycle through the options
+- **Esc**: Cancel completion
 
 ### Terminal Shortcuts
+- **Ctrl+R**: Search command history (zsh reverse search)
 - **Ctrl+L**: Clear screen
 - **Ctrl+C**: Cancel current command
 - **Ctrl+D**: Exit terminal
 
 ### How to Test
 ```bash
-# Try these shortcuts:
-Ctrl+T                  # Search for files
-Ctrl+R                  # Search command history
-Alt+C                   # Search for directories
+ac-help                 # Prints all of the above in your terminal
 ```
 
 ---
 
 ## 🎯 Practice Exercises
 
-### Exercise 1: File Operations
-1. Use `ll` to see detailed file listing
-2. Use `lt` to see tree view
-3. Use `fzf-open` to find and open a file
-4. Use `search "alias"` to find files containing "alias"
+### Exercise 1: Autosuggestions
+1. Run a long command, e.g. `git log --oneline --graph --decorate`
+2. Start typing `git log` again — the rest appears in gray
+3. Press `→` to accept it one character at a time, then `End` to accept the rest
+4. Run `ac-help` to see every shortcut
 
-### Exercise 2: Git Operations
-1. Use `lg` to open lazygit
-2. Use `gs` to check git status
-3. Use `glog` to see git history
-4. Make a change and use `git diff` to see delta highlighting
+### Exercise 2: The Git Prompt
+1. `cd` into any git repository and look at the branch in the prompt
+2. Create a file — the prompt picks up the untracked marker
+3. Commit it without pushing — the prompt shows `⇡1` (one commit ahead)
+4. Run `git fetch` in a repo with new upstream commits — the prompt shows `⇣N`
 
-### Exercise 3: System Information
-1. Use `sysinfo` to see system information
-2. Use `htop` to see running processes
-3. Use `weather <your-city>` to get weather
-4. Use `myip` to see your public IP
+### Exercise 3: Themes
+1. Run `theme-status` to see whether macOS is in light or dark mode
+2. Run `light`, then restart Ghostty
+3. Run `dark`, then restart Ghostty
+4. Run `theme-auto` to follow the system setting
 
-### Exercise 4: Navigation
-1. Use `nav` to navigate directories
-2. Use `..` to go up directories
-3. Use `mkcd testdir` to create and enter a directory
+### Exercise 4: Navigation and Files
+1. Use `..` to go up directories
+2. Use `mkcd testdir` to create and enter a directory
+3. Use `ll` to see a detailed listing
 4. Use `Ctrl+R` to search command history
 
 ---
@@ -779,7 +469,7 @@ p10k configure
 
 ## 🎉 Conclusion
 
-Your Ghostty terminal is now a powerful, feature-rich development environment! Each tool has been carefully selected to enhance your productivity and make terminal work more enjoyable. Take time to practice with each feature, and soon you'll wonder how you ever worked without them!
+Your Ghostty terminal is now a fast, quiet development environment: a prompt that tells you exactly where your repo stands, suggestions pulled from your own history, and a theme that follows macOS. Nothing shadows the standard commands, and nothing slows down your shell start.
 
 ---
 

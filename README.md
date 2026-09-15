@@ -1,19 +1,19 @@
 # 🚀 Ghostty ZSH Configuration
 
-A comprehensive terminal enhancement setup for macOS using Ghostty terminal with modern tools and productivity features.
+A lean terminal setup for macOS using the Ghostty terminal. No command replacements, no extra binaries — just a fast shell, a good prompt, and inline autosuggestions.
 
 ## ✨ What This Setup Provides
 
+- **Inline autosuggestions** - Gray suggestion from your history as you type; `→` accepts it
+- **Git-aware prompt** - Branch name, dirty/untracked state and ahead/behind counts, shown automatically in any repo
+- **Fast startup** - Minimal plugin list and Powerlevel10k instant prompt
 - **Multi-line paste support** - No more "Are you sure?" prompts
 - **SSH terminal compatibility** - Works seamlessly when SSHing into remote devices (no more "unknown terminal type" errors)
 - **Dynamic theme support** - Automatic light/dark mode switching with high contrast colors
-- **Beautiful terminal appearance** with GitHub-inspired theme and Nerd Fonts
-- **Modern command-line tools** (eza, bat, fzf, fd, ripgrep, lazygit, delta)
-- **Enhanced shell experience** with Oh My Zsh and Powerlevel10k
 - **Conda package management** with Python 3.12 environment and visual indicators
-- **Productivity aliases and functions** for faster workflow
-- **Fuzzy finder integration** with keyboard shortcuts
 - **Theme management** - Easy switching between light and dark modes
+
+> **Note:** This config deliberately does **not** install or alias fzf, eza, bat, fd, ripgrep, lazygit, delta or htop. `ls`, `cat`, `find`, `grep` and `top` are the real system commands.
 
 ## 🎯 Quick Start
 
@@ -46,9 +46,8 @@ chmod +x scripts/install.sh
    brew install --cask ghostty
    ```
 
-3. **Install required tools**:
+3. **Install the Nerd Font** (needed for the prompt icons):
    ```bash
-   brew install fzf bat eza fd ripgrep tree htop lazygit delta
    brew install --cask font-jetbrains-mono-nerd-font
    ```
 
@@ -95,26 +94,12 @@ chmod +x scripts/install.sh
    ./scripts/switch-theme.sh auto
    ```
 
-9. **Set up fzf**:
+9. **Restart your terminal** or run:
    ```bash
-   $(brew --prefix)/opt/fzf/install --all
+   source ~/.zshrc
    ```
 
-10. **Configure git delta**:
-    ```bash
-    git config --global core.pager delta
-    git config --global interactive.diffFilter 'delta --color-only'
-    git config --global delta.navigate true
-    git config --global delta.side-by-side true
-    git config --global delta.syntax-theme "Monokai Extended"
-    ```
-
-11. **Restart your terminal** or run:
-    ```bash
-    source ~/.zshrc
-    ```
-
-12. **Configure your prompt**:
+10. **Configure your prompt** (optional):
     ```bash
     p10k configure
     ```
@@ -140,40 +125,34 @@ ghostty-zsh-config/
     └── TROUBLESHOOTING.md      # Troubleshooting guide
 ```
 
-## 🛠️ Tools Included
-
-### Core Tools
-- **fzf** - Fuzzy finder for files, directories, and history
-- **bat** - Syntax-highlighted file viewer
-- **eza** - Modern file listing with icons
-- **fd** - Fast file search
-- **ripgrep** - Lightning-fast text search
-- **lazygit** - Beautiful git interface
-- **delta** - Better git diffs
-- **htop** - Enhanced process viewer
-- **Conda** - Package manager with Python 3.12 environment
+## 🛠️ What Gets Installed
 
 ### Shell Enhancements
 - **Oh My Zsh** - ZSH framework
-- **Powerlevel10k** - Beautiful prompt theme
-- **zsh-autosuggestions** - Command suggestions
-- **zsh-syntax-highlighting** - Syntax highlighting
+- **Powerlevel10k** - Fast, git-aware prompt theme
+- **zsh-autosuggestions** - Inline command suggestions from history
+- **zsh-syntax-highlighting** - Syntax highlighting as you type
 - **zsh-completions** - Enhanced tab completion
+
+### Other
+- **JetBrains Mono Nerd Font** - Supplies the prompt glyphs
+- **Conda** - Package manager with Python 3.12 environment
+
+Only four Oh My Zsh plugins are enabled (`git`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-completions`) to keep shell startup fast.
 
 ## ⌨️ Key Features
 
-### Keyboard Shortcuts
-- `Ctrl+T` - Fuzzy file search
-- `Ctrl+R` - Fuzzy history search
-- `Alt+C` - Fuzzy directory navigation
+### Autosuggestion Shortcuts
+- `→` (Right Arrow) - Accept the suggestion one character at a time
+- `End` - Accept the entire suggestion
+- `Ctrl+→` - Accept one word at a time
+- `Tab` - Show the completion menu
+- `ac-help` - Print this cheatsheet in the terminal
 
 ### Useful Aliases
-- `ll` - Detailed file listing with icons
-- `lg` - Open lazygit interface
-- `sysinfo` - System information
+- `ll` - Detailed file listing
 - `weather <city>` - Weather information
-- `fzf-open` - Find and open files
-- `search <pattern>` - Search files with ripgrep + fzf
+- `glog` - Git log with graph
 
 ### Conda Aliases
 - `ca <env>` - Activate conda environment
@@ -185,7 +164,6 @@ ghostty-zsh-config/
 - `cup <package>` - Update conda package
 - `csp <package>` - Search conda packages
 - `cinfo` - Show detailed conda environment information
-- `cact` - Interactive conda environment selection with fzf
 - `cca <env> [python_version]` - Create and activate new environment
 - `crem <env>` - Remove conda environment
 - `cpkg [env]` - List packages in environment
@@ -271,25 +249,22 @@ After installation, try these commands:
 
 ```bash
 # File operations
-ls                      # Modern file listing with icons
 ll                      # Detailed listing
-lt                      # Tree view
-fzf-open                # Find and open files
+la                      # Include hidden files
 
 # Git operations
-lg                      # Beautiful git interface
 gs                      # Git status
+gd                      # Git diff
 glog                    # Git log with graph
 
-# System information
-sysinfo                 # System information
-htop                    # Process viewer
-weather London          # Weather information
+# Themes
+light                   # Switch Ghostty to light mode
+dark                    # Switch Ghostty to dark mode
+theme-status            # Show the current system theme
 
-# Search and navigation
-search "function"       # Search files
-nav                     # Navigate directories
-Ctrl+R                  # Search command history
+# Misc
+weather London          # Weather information
+ac-help                 # Autosuggestion / completion shortcuts
 
 # Conda and Python
 python --version        # Check Python version (3.12.11)
@@ -363,11 +338,7 @@ If you encounter any issues or have questions:
 - [Ghostty](https://github.com/ghostty-org/ghostty) - The terminal emulator
 - [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) - ZSH framework
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k) - Prompt theme
-- [fzf](https://github.com/junegunn/fzf) - Fuzzy finder
-- [eza](https://github.com/eza-community/eza) - Modern ls replacement
-- [bat](https://github.com/sharkdp/bat) - Modern cat replacement
-- [lazygit](https://github.com/jesseduffield/lazygit) - Git interface
-- [delta](https://github.com/dandavison/delta) - Git diff tool
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) - Inline suggestions
 
 ---
 

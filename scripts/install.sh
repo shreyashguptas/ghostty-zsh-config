@@ -76,11 +76,7 @@ fi
 
 print_header "📦 Installing Required Tools"
 
-# Install core tools
-print_status "Installing core productivity tools..."
-brew install fzf bat eza fd ripgrep tree htop lazygit delta
-
-# Install fonts
+# Nerd Font is required for the Powerlevel10k prompt icons
 print_status "Installing Nerd Fonts..."
 brew install --cask font-jetbrains-mono-nerd-font
 
@@ -202,21 +198,19 @@ cp "$REPO_DIR/configs/.p10k.zsh" ~/
 
 print_success "Configuration files copied"
 
-print_header "🔧 Setting Up Additional Tools"
+print_header "🔧 Configuring Git"
 
-# Set up fzf
-print_status "Setting up fzf..."
-$(brew --prefix)/opt/fzf/install --all
+# Make the first push on a new branch set its upstream automatically.
+# Without an upstream there is nothing for the prompt to compare against, so
+# the ahead/behind (⇡/⇣) indicator stays blank until this is set.
+print_status "Enabling push.autoSetupRemote..."
+git config --global push.autoSetupRemote true
 
-# Configure git delta
-print_status "Configuring git delta..."
-git config --global core.pager delta
-git config --global interactive.diffFilter 'delta --color-only'
-git config --global delta.navigate true
-git config --global delta.side-by-side true
-git config --global delta.syntax-theme "Monokai Extended"
+# Drop remote-tracking refs for branches that no longer exist on the remote.
+print_status "Enabling fetch.prune..."
+git config --global fetch.prune true
 
-print_success "Additional tools configured"
+print_success "Git configured"
 
 print_header "🎉 Installation Complete!"
 
@@ -226,23 +220,16 @@ echo ""
 echo -e "${CYAN}📋 What's been set up:${NC}"
 echo "   ✅ Ghostty configuration with multi-line paste support"
 echo "   ✅ Oh My Zsh with Powerlevel10k theme"
-echo "   ✅ Essential plugins (autosuggestions, syntax highlighting, etc.)"
-echo "   ✅ Productivity tools (fzf, bat, eza, fd, ripgrep, lazygit, delta)"
+echo "   ✅ Autosuggestions, syntax highlighting and Tab completions"
 echo "   ✅ Conda package manager with Python 3.12 environment"
 echo "   ✅ Useful aliases and functions (including Conda shortcuts)"
-echo "   ✅ Beautiful prompt with git status and system info"
+echo "   ✅ Fast prompt with git branch, status and ahead/behind counts"
 echo ""
 echo -e "${CYAN}🔧 New features available:${NC}"
 echo "   • Multi-line paste (no more 'Are you sure?' prompts)"
-echo "   • Fuzzy file search with Ctrl+T"
-echo "   • Fuzzy directory navigation with Alt+C"
-echo "   • Fuzzy history search with Ctrl+R"
-echo "   • Better file listing with 'ls' (now uses eza)"
-echo "   • Syntax highlighted 'cat' (now uses bat)"
-echo "   • Faster 'find' (now uses fd)"
-echo "   • Better 'grep' (now uses ripgrep)"
-echo "   • Git GUI with 'lg' (lazygit)"
-echo "   • System info with 'sysinfo'"
+echo "   • Inline autosuggestions from history (→ to accept)"
+echo "   • Git branch, dirty state and ahead/behind counts in the prompt"
+echo "   • Light/dark theme switching: 'light', 'dark', 'theme-auto'"
 echo "   • Weather with 'weather <city>'"
 echo "   • Conda package management with Python 3.12"
 echo "   • Conda shortcuts: ca, cda, ce, ci, cc, cr, cup, csp"
@@ -254,9 +241,7 @@ echo "3. Try the new features!"
 echo ""
 echo -e "${CYAN}💡 Pro tips:${NC}"
 echo "   • Use 'p10k configure' to customize your prompt"
-echo "   • Use 'lg' for a beautiful git interface"
-echo "   • Use 'fzf-open' to quickly open files"
-echo "   • Use 'nav' for quick directory navigation"
-echo "   • Use 'sysinfo' to see system information"
+echo "   • Use 'ac-help' to see autosuggestion/completion shortcuts"
+echo "   • Use 'light' / 'dark' to switch the Ghostty color scheme"
 echo ""
 echo -e "${GREEN}Happy coding! 🚀${NC}"

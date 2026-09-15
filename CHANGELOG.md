@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-09-15
+
+### Removed (BREAKING)
+- **fzf** — the fuzzy finder, its key bindings (`Ctrl+T`, `Ctrl+R`, `Alt+C` widgets),
+  `FZF_DEFAULT_COMMAND`/`FZF_CTRL_T_COMMAND`/`FZF_ALT_C_COMMAND`, and the
+  `~/.fzf.zsh` source line
+- **eza** — and the `ls`/`ll`/`la`/`l`/`lt`/`lta` aliases that pointed at it
+- **bat** — and the `cat` alias
+- **fd** — and the `find` alias
+- **ripgrep** — and the `grep` alias
+- **lazygit** — and the `lg` alias
+- **delta** — including the `git config --global core.pager delta` setup
+- **htop** — and the `top` alias
+- **tree** and **neofetch**
+- Functions that depended on the above: `fzf-open`, `fzf-cd`, `fzf-git-log`,
+  `search`, `nav`, `sysinfo`, `conda_activate` (and its `cact` alias)
+- Oh My Zsh plugins trimmed from 21 to 4: removed `brew`, `macos`, `docker`,
+  `docker-compose`, `node`, `npm`, `python`, `pip`, `conda`, `colored-man-pages`,
+  `command-not-found`, `copyfile`, `copypath`, `dirhistory`, `history`, `sudo`,
+  `web-search`, `extract` and `z`
+
+### Added
+- **Powerlevel10k instant prompt** block at the top of `.zshrc`, so the prompt
+  draws immediately on shell start
+- `ZSH_AUTOSUGGEST_STRATEGY=(history completion)` — suggestions now fall back to
+  tab completion when history has no match
+- `install.sh` now sets `push.autoSetupRemote` (so a new branch gets an upstream
+  on first push, which is what the prompt's ⇡/⇣ counts compare against) and
+  `fetch.prune`
+
+### Changed
+- `ls`/`ll`/`la`/`l` now use the built-in `ls` with color (`-G`)
+- Conda is initialized by sourcing `conda.sh` directly rather than running
+  `conda shell.zsh hook`, which spawned a Python process on every shell start
+- Removed the duplicate `conda init` block and its hardcoded
+  `/Users/shreyashgupta/...` paths, which only worked on one machine
+- `conda activate py312` is now guarded — it no longer errors when conda or the
+  environment is missing
+- Removed the redundant second `compinit` call (Oh My Zsh already runs it)
+
+### Kept
+- zsh-autosuggestions, zsh-syntax-highlighting and zsh-completions
+- The Powerlevel10k prompt with git branch, dirty state and ahead/behind counts
+- Light/dark theme switching and the Ghostty color schemes
+- SSH `TERM` compatibility fix
+- All conda, git, navigation and theme aliases
+
 ## [1.1.0] - 2024-12-06
 
 ### Added
