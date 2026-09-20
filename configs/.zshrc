@@ -54,6 +54,9 @@ if [[ -z "$TERM" ]] || [[ "$TERM" == "unknown" ]]; then
     export TERM="xterm-256color"
 fi
 
+# Auto-tint Ghostty tabs by SSH host (deterministic color per hostname)
+[[ -f ~/.ghostty-ssh-colors.zsh ]] && source ~/.ghostty-ssh-colors.zsh
+
 # ===== CUSTOM CONFIGURATION =====
 
 # History configuration

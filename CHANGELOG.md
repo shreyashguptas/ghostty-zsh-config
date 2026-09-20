@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- `configs/ghostty-ssh-colors.zsh` — wraps `ssh` to tint the Ghostty tab's
+  background color deterministically by target hostname (same host always
+  gets the same color/emoji), reverting to the normal theme background on
+  disconnect. Installed to `~/.ghostty-ssh-colors.zsh` and sourced from
+  `.zshrc`.
+
 ## [2.0.0] - 2026-09-15
 
 ### Removed (BREAKING)

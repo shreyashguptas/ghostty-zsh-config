@@ -123,7 +123,8 @@ ghostty-zsh-config/
 │   ├── ghostty-light.conf      # Ghostty terminal configuration (light mode)
 │   ├── .zshrc                  # ZSH configuration with aliases and functions
 │   ├── .p10k.zsh              # Powerlevel10k prompt configuration
-│   └── ssh_config              # SSH config template for terminal compatibility
+│   ├── ssh_config              # SSH config template for terminal compatibility
+│   └── ghostty-ssh-colors.zsh  # Auto-tints Ghostty tabs by SSH host
 ├── scripts/                     # Installation and utility scripts
 │   ├── install.sh              # Automated installation script
 │   ├── update.sh               # Update all tools script
@@ -191,6 +192,12 @@ Only four Oh My Zsh plugins are enabled (`git`, `zsh-autosuggestions`, `zsh-synt
 - `extract <file>` - Extract any archive format
 - `backup <file>` - Create timestamped backup
 - `killport <port>` - Kill process using specific port
+
+### SSH Host Tab Tinting
+`ssh <host>` is wrapped so each tab's background color is deterministically derived
+from the target hostname (same host always gets the same color/emoji, no lookup
+table to maintain). The tab reverts to your normal theme background on disconnect.
+Only active inside Ghostty.
 
 ## 📚 Documentation
 

@@ -244,6 +244,7 @@ fi
 
 cp "$REPO_DIR/configs/.zshrc" ~/
 cp "$REPO_DIR/configs/.p10k.zsh" ~/
+cp "$REPO_DIR/configs/ghostty-ssh-colors.zsh" ~/.ghostty-ssh-colors.zsh
 
 print_success "Configuration files copied"
 
@@ -279,6 +280,7 @@ echo "   • Multi-line paste (no more 'Are you sure?' prompts)"
 echo "   • Inline autosuggestions from history (→ to accept)"
 echo "   • Git branch, dirty state and ahead/behind counts in the prompt"
 echo "   • Light/dark theme switching: 'light', 'dark', 'theme-auto'"
+echo "   • Auto-tinted tabs per SSH host (deterministic color from hostname)"
 echo "   • Weather with 'weather <city>'"
 echo "   • Conda package management with Python 3.12"
 echo "   • Conda shortcuts: ca, cda, ce, ci, cc, cr, cup, csp"
