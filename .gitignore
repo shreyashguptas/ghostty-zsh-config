@@ -26,6 +26,9 @@ temp/
 *.swp
 *.swo
 
+# Claude Code (scratch state and git worktrees live under .claude/worktrees/)
+.claude/
+
 # Local configuration overrides
 local.zsh
 local.conf
