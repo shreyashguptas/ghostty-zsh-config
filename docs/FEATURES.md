@@ -19,23 +19,32 @@ This setup is deliberately minimal. It does not install fzf, eza, bat, fd, ripgr
 
 ---
 
-## 1. Multi-line Paste Fix
+## 1. Multi-line Paste
 
 ### What Changed
 - **Problem**: Ghostty was asking "Are you sure?" when pasting multi-line content
-- **Solution**: Added configuration to automatically handle multi-line pastes
+- **What actually fixes it**: `clipboard-paste-protection`. Earlier versions of
+  this repo set `paste-multiline-mode` and `paste-multiline-delay`, which are
+  **not real Ghostty settings** — they were silently rejected as unknown fields.
 
-### Configuration Added
-```bash
-# In ~/.config/ghostty/ghostty.conf
-paste-multiline-mode auto
-paste-multiline-delay 0.1
+### Configuration
+```ini
+# In ~/.config/ghostty/config
+clipboard-paste-protection = true
 ```
 
+This is left at Ghostty's default of `true`. It only prompts for pastes that
+are genuinely unsafe — text ending in a newline, which would execute the moment
+it lands. Ordinary multi-line pastes go through silently via bracketed paste, so
+the original annoyance is already gone.
+
+If you want no prompt at all, set it to `false` — and know that pasted text
+ending in a newline will run immediately.
+
 ### How to Test
-1. Copy a multi-line script or text
+1. Copy a multi-line script or text (no trailing newline)
 2. Paste it into your terminal
-3. It should paste immediately without any prompts!
+3. It pastes immediately, with no prompt
 
 ---
 
