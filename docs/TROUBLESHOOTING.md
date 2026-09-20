@@ -34,7 +34,13 @@ ls ~/Library/Fonts/ | grep JetBrains
 brew install --cask font-jetbrains-mono-nerd-font
 
 # Restart Ghostty after installing fonts
-# In Ghostty preferences, set font to "JetBrains Mono Nerd Font"
+
+# Confirm the exact family name macOS reports — it is NOT "JetBrains Mono
+# Nerd Font". The cask installs it as "JetBrainsMono Nerd Font Mono".
+ghostty +list-fonts | grep -i jetbrains
+
+# Then set that exact name in ~/.config/ghostty/config:
+#   font-family = JetBrainsMono Nerd Font Mono
 ```
 
 ### 3. Autosuggestions Not Appearing

@@ -215,6 +215,19 @@ if [ -f ~/.config/ghostty/config ]; then
     cp ~/.config/ghostty/config ~/.config/ghostty/config.backup
 fi
 
+# Validate the palettes before installing them. Ghostty silently accepts a
+# config full of unknown fields at parse time and only complains in a dialog
+# on launch, so catch a broken config here instead of shipping it.
+if command -v ghostty &> /dev/null; then
+    for conf in "$REPO_DIR/configs/ghostty.conf" "$REPO_DIR/configs/ghostty-light.conf"; do
+        if ! ghostty +validate-config --config-file="$conf" 2>&1; then
+            print_error "Invalid Ghostty config: $conf (see errors above)"
+            exit 1
+        fi
+    done
+    print_success "Ghostty configs validated"
+fi
+
 # Install both palettes so theme switching works without the repo present
 cp "$REPO_DIR/configs/ghostty.conf" ~/.config/ghostty/themes/dark.conf
 cp "$REPO_DIR/configs/ghostty-light.conf" ~/.config/ghostty/themes/light.conf
